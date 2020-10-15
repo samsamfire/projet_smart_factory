@@ -1,8 +1,0 @@
-prefix=/home/samsam/noetic_workspace/install
-
-Name: joy_teleop
-Description: Description of joy_teleop
-Version: 0.4.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: actionlib
