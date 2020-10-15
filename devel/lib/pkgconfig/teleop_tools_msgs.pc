@@ -1,0 +1,8 @@
+prefix=/home/samsam/noetic_workspace/devel
+
+Name: teleop_tools_msgs
+Description: Description of teleop_tools_msgs
+Version: 0.4.0
+Cflags: -I/home/samsam/noetic_workspace/devel/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime actionlib_msgs

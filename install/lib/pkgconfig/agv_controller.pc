@@ -1,0 +1,8 @@
+prefix=/home/samsam/noetic_workspace/install
+
+Name: agv_controller
+Description: Description of agv_controller
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

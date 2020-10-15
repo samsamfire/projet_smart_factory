@@ -1,0 +1,2 @@
+agv_controller:gazebo_ros_demos/gazebo_tutorials:gazebo_ros_demos/rrbot_control:gazebo_ros_demos/rrbot_description:gazebo_ros_demos/rrbot_gazebo:ros_control_boilerplate:teleop_tools/joy_teleop:teleop_tools/key_teleop:teleop_tools/mouse_teleop:teleop_tools/teleop_tools:teleop_tools/teleop_tools_msgs:teleop_twist_keyboard
+-DCATKIN_DEVEL_PREFIX=/home/samsam/noetic_workspace/devel -DCMAKE_INSTALL_PREFIX=/home/samsam/noetic_workspace/install -G Unix Makefiles
