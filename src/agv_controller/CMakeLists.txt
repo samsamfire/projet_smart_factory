@@ -9,6 +9,7 @@ project(agv_controller)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   controller_manager
+  hardware_interface
   roscpp
   rospy
   std_msgs
@@ -119,12 +120,16 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  include/${PROJECT_NAME}
 )
 
-## Declare a C++ library
-# add_library(${PROJECT_NAME}
+
+
+## Declare a C++ library add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/agv_controller.cpp
 # )
+
+#add_library(${PROJECT_NAME} src/agv_hw.cpp)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -135,6 +140,10 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/agv_controller_node.cpp)
+
+#add_executable(${PROJECT_NAME}_node src/agv_hw.cpp)
+
+add_executable(agv_controller_node src/agv_controller_manager.cpp src/agv_hw.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -150,6 +159,13 @@ include_directories(
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
+target_link_libraries(agv_controller_node
+
+    ${catkin_LIBRARIES}
+)
+
+
+
 
 #############
 ## Install ##
@@ -171,6 +187,18 @@ include_directories(
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
+# install(TARGETS ${PROJECT_NAME}_node
+
+#     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+# )
+install(TARGETS agv_controller_node
+
+      RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+
+  )
+
+
+
 ## Mark libraries for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
 # install(TARGETS ${PROJECT_NAME}
@@ -186,9 +214,13 @@ include_directories(
   install(DIRECTORY config/
    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}/config
  )
-   install(DIRECTORY meshes/
+  install(DIRECTORY meshes/
    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}/meshes
  )
+  install(DIRECTORY include/
+    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}/include
+  )
+
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
