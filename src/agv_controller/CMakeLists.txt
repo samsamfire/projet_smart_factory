@@ -207,6 +207,11 @@ install(TARGETS agv_controller_node
       RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 
   )
+install(TARGETS agv_wrapper_node
+
+      RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+
+  )
 
 
 
