@@ -2,7 +2,7 @@
 #define H_AGV_WRAPPER
 
 #include "ros/ros.h"
-#include "../../../agv_driver/RPICanDriver/src/AGV_Driver.h"
+#include "agv_driver/AGV_Driver.h"
 #include "geometry_msgs/Twist.h"
 #include "std_srvs/Trigger.h"
 
