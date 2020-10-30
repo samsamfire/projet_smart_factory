@@ -13,6 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  std_srvs
+  geometry_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -131,6 +133,9 @@ include_directories(
 
 #add_library(${PROJECT_NAME} src/agv_hw.cpp)
 
+#add_library(agv_driver src/agv_driver/AGV_Driver.cpp src/agv_driver/Motor_Driver_DSPIC33.cpp)
+
+
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
@@ -144,6 +149,7 @@ include_directories(
 #add_executable(${PROJECT_NAME}_node src/agv_hw.cpp)
 
 add_executable(agv_controller_node src/agv_controller_manager.cpp src/agv_hw.cpp)
+add_executable(agv_wrapper_node src/AgvROSWrapper.cpp src/agv_driver/AGV_Driver.cpp src/agv_driver/Motor_Driver_DSPIC33.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -162,6 +168,11 @@ add_executable(agv_controller_node src/agv_controller_manager.cpp src/agv_hw.cpp
 target_link_libraries(agv_controller_node
 
     ${catkin_LIBRARIES}
+)
+target_link_libraries(agv_wrapper_node
+
+    ${catkin_LIBRARIES}
+
 )
 
 

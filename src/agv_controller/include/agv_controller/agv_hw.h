@@ -3,6 +3,10 @@
 #include "hardware_interface/posvel_command_interface.h"
 #include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/robot_hw.h>
+#include <string>
+
+#include "../../../../agv_driver/RPICanDriver/src/AGV_Driver.h"
+
 
 
 
