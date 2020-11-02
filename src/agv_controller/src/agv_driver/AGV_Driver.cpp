@@ -69,9 +69,11 @@ void AGV::writeVel( double vel[3] ){
 	// m_v[1] = -(1/Rr)*(Vx+Vy+(La+Lb))*F*Z;
 	// m_v[2] = (1/Rr)*(Vx-Vy-(La+Lb))*F*Z;
 	// m_v[3] = -(1/Rr)*(Vx+Vy+(La+Lb))*F*Z;
+
+	//0 and 3 are same direction and 1 and 2 same opposite direction to 0 & 3
 	m_v[0] = Vx*F*Z;
-	m_v[1] = Vx*F*Z;
-	m_v[2] = Vx*F*Z;
+	m_v[1] = - Vx*F*Z; 
+	m_v[2] = - Vx*F*Z;
 	m_v[3] = Vx*F*Z;
 
 	for (int i = 0; i < 4; ++i)
