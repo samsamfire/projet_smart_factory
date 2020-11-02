@@ -98,9 +98,9 @@ bool AgvROSWrapper::callbackStop(std_srvs::Trigger::Request &req, std_srvs::Trig
 
 	else{
 
-		res.message = false;
+		res.message = true;
 		res.message="Stopped" + std::to_string(result) + "motor(s)";
-		return false;
+		return true;
 	}
 	
 }
@@ -119,9 +119,9 @@ bool AgvROSWrapper::callbackStart(std_srvs::Trigger::Request &req, std_srvs::Tri
 		return true;
 	}
 	else{
-		res.success = false;
+		res.success = true;
 		res.message = "Turned on"+std::to_string(result)+"motor(s)";
-		return false;
+		return true;
 	}
 
 }
@@ -151,19 +151,35 @@ bool AgvROSWrapper::callbackCloseBus(std_srvs::Trigger::Request &req, std_srvs::
 
 
 
-int main(int argc, char *argv[])
+int main(int argc, char ** argv)
 {
 	ros::init(argc, argv, "agv_driver");
     ros::NodeHandle nh;
     ros::AsyncSpinner spinner(4);
     spinner.start();
 
+    if(argc == 5){
+    	AgvROSWrapper agv_wrapper1(&nh,std::stoi(argv[0]),std::stoi(argv[1]),std::stoi(argv[2]),std::stoi(argv[3]));
 
-    AgvROSWrapper agv_wrapper(&nh,5,6,-1,-1);
+    	ROS_INFO("AGV Node 1 is running");
 
-    ROS_INFO("AGV Node is running");
+    	ros::waitForShutdown();
 
-    ros::waitForShutdown();
+    	agv_wrapper1.stop();
+    }
+    else{
+    	AgvROSWrapper agv_wrapper2(&nh,4,5,6,7);
+    	ROS_INFO("AGV Node 2 is running");
 
-    agv_wrapper.stop();
+    	ros::waitForShutdown();
+
+
+    }
+    
+
+    
+
+
+
+    
 }

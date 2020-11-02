@@ -14,8 +14,8 @@
 #include <linux/can/raw.h>
 #include <stdint.h>
 
-#define Rr 10 //Rayon de la roue
-#define Z 70 //Rapport de reduction
+#define Rr 0.05 //Rayon de la roue en m
+#define Z 1 //Rapport de reduction
 #define La 0.2//Demie longueur
 #define Lb 0.3 //Demie largeur
 /*Facteur d'aggrandissment pour ne pas perdre trop d'informations
