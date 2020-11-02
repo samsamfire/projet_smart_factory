@@ -148,7 +148,7 @@ include_directories(
 
 #add_executable(${PROJECT_NAME}_node src/agv_hw.cpp)
 
-#add_executable(agv_controller_node src/agv_controller_manager.cpp src/agv_hw.cpp)
+add_executable(agv_controller_node src/agv_controller_manager.cpp src/agv_hw.cpp)
 add_executable(agv_wrapper_node src/AgvROSWrapper.cpp src/agv_driver/AGV_Driver.cpp src/agv_driver/Motor_Driver_DSPIC33.cpp)
 
 ## Rename C++ executable without prefix
