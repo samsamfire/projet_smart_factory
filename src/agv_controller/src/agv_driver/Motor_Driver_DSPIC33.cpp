@@ -45,7 +45,6 @@ void Motor::readVelEncoder(){
 
 bool Motor::readEncoder(){
 
-	printf("%i\n",s );
 	/*TODO add an error mechanism*/
 	read(s, &frame, sizeof(frame));
 
