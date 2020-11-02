@@ -9,13 +9,12 @@ Motor::Motor(int motor_address){
 }
 
 
-bool Motor::readCAN(){
+bool Motor::readCAN(uint8_t nbyes){
 	//Frame is supposed to contain nbytes, read is non blocking
 	//read returns number of bytes read
 	int nbytes = 0;
 	nbytes = read(s,&frame,sizeof(frame));
 
-	if
 
 	return true;
 }
