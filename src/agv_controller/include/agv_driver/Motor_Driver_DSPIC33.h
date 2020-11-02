@@ -57,7 +57,7 @@ class Motor
 	private:
 
 		//int16_t twist[3];
-		int16_t vel;
+		int16_t velSens;
 		int16_t pos;
 		bool state; //On or Off
 		uint8_t mode; // pos 1, vel 2, torque 3...

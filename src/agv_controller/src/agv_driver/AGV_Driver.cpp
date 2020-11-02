@@ -81,7 +81,7 @@ void AGV::writeVel( double vel[3] ){
 		//Check if motor is activated
 		if(m[i].getState() == 1){
 			printf("Sending speed of %i to motor %i\r\n",m_v[i],i);
-			m[i].writeVel((int16_t)m_v[i]);
+			m[i].writeVel(m_v[i]);
 		}
 		else{
 			printf("Error motor %i is not on\r\n",i );
@@ -121,10 +121,14 @@ uint8_t AGV::stop(){
 	{
 		if(m[i].getAdress() != -1){
 			m[i].stop();
+			//Set speeds to 0 also
+			m[i].writeVel(0);
 			j++;
 		}
 	}
 	return j;
+
+	
 
 }
 

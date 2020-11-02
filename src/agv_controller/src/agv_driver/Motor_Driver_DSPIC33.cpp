@@ -28,7 +28,7 @@ void Motor::readPos(){
 void Motor::readVel(){
 	//Add some filtering to get right motor
 	read(s, &frame, sizeof(frame));
-	vel = (frame.data[1] << 8) + frame.data[0];
+	velSens = (frame.data[1] << 8) + frame.data[0];
 }
 
 void Motor::readPosEncoder(){
@@ -92,8 +92,8 @@ void Motor::writePos(uint16_t pos){
 
 	frame.can_id = (address << 7) | SET_POS_ID ;
 	frame.can_dlc = 2;
-	frame.data[0] = vel & 0xFF;
-	frame.data[1] = vel >> 8;
+	frame.data[0] = pos & 0xFF;
+	frame.data[1] = pos >> 8;
 	write(s,&frame,sizeof(frame));
 
 
