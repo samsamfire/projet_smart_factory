@@ -158,23 +158,14 @@ int main(int argc, char ** argv)
     ros::AsyncSpinner spinner(4);
     spinner.start();
 
-    if(argc == 5){
-    	AgvROSWrapper agv_wrapper1(&nh,std::stoi(argv[0]),std::stoi(argv[1]),std::stoi(argv[2]),std::stoi(argv[3]));
+    AgvROSWrapper agv_wrapper(&nh,4,5,6,7);
+	ROS_INFO("AGV Node is running");
 
-    	ROS_INFO("AGV Node 1 is running");
+	ros::waitForShutdown();
 
-    	ros::waitForShutdown();
+	agv_wrapper.stop();
 
-    	agv_wrapper1.stop();
-    }
-    else{
-    	AgvROSWrapper agv_wrapper2(&nh,4,5,6,7);
-    	ROS_INFO("AGV Node 2 is running");
-
-    	ros::waitForShutdown();
-
-
-    }
+   
     
 
     

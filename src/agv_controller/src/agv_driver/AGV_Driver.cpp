@@ -65,10 +65,14 @@ void AGV::writeVel( double vel[3] ){
 	
 //Check signs by testing
 
-	m_v[0] = (1/Rr)*(Vx-Vy-(La+Lb))*F*Z;
-	m_v[1] = -(1/Rr)*(Vx+Vy+(La+Lb))*F*Z;
-	m_v[2] = (1/Rr)*(Vx-Vy-(La+Lb))*F*Z;
-	m_v[3] = -(1/Rr)*(Vx+Vy+(La+Lb))*F*Z;
+	// m_v[0] = (1/Rr)*(Vx-Vy-(La+Lb))*F*Z;
+	// m_v[1] = -(1/Rr)*(Vx+Vy+(La+Lb))*F*Z;
+	// m_v[2] = (1/Rr)*(Vx-Vy-(La+Lb))*F*Z;
+	// m_v[3] = -(1/Rr)*(Vx+Vy+(La+Lb))*F*Z;
+	m_v[0] = Vx*F*Z;
+	m_v[1] = Vx*F*Z;
+	m_v[2] = Vx*F*Z;
+	m_v[3] = Vx*F*Z;
 
 	for (int i = 0; i < 4; ++i)
 	{
