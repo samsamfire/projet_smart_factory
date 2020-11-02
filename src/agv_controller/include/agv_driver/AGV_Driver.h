@@ -9,6 +9,7 @@
 #include <net/if.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
+#include <sys/fcntl.h>
 #include <linux/can.h>
 #include <linux/can/raw.h>
 #include <stdint.h>
@@ -47,15 +48,18 @@ public:
 	m{Motor(ad_fl),Motor(ad_fr),Motor(ad_br),Motor(ad_bl)}{};
 
 	void setMode();
-	void writePos();
 
+	void writePos();
 	void writeVel(double vel[3]);
 	void readVel(void);
 
 	double* getVel(void);
 
-	void start();
-	void stop();
+	uint8_t start(); //Returns the number of motors started correctly.
+	uint8_t stop();  //Returns the numbers of motors stopped correctly
+
+	uint8_t* getState();
+
 
 	bool openBus(int bitrate);
 	bool closeBus();

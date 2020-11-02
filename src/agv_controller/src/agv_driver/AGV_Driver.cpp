@@ -21,12 +21,12 @@ void AGV::readVel(void){
 			v[i] = m[i].getVel();
 
 			//Debugging
-			printf("Read position,velocity,torque : %i %d %i motor %i\r\n",
-				m[i].getPos(),m[i].getVel(),m[i].getTorque(),i);
+			//printf("Read position,velocity,torque : %i %d %i motor %i\r\n",
+			//	m[i].getPos(),m[i].getVel(),m[i].getTorque(),i);
 		}
 
 		else{
-			printf("Motor is %i is not on\r\n",i);
+			//printf("Motor is %i is not on\r\n",i);
 		}
 		
 	}
@@ -83,19 +83,22 @@ void AGV::writeVel( double vel[3] ){
 		
 	}
 
-
 }
 
 /*Start each motor of the agv*/
 /*Bus needs to be opened before calling this function*/
 
-void AGV::start(){
+uint8_t AGV::start(){
+	uint8_t j=0;
 	for (int i = 0; i < 4; ++i)
 	{
 		if(m[i].getAdress() != -1){
 			m[i].start();
+			j++;
 		}
 	}
+
+	return j;
 
 }
 
@@ -104,14 +107,18 @@ void AGV::start(){
 /*Bus needs to be opened before calling this function*/
 
 
-void AGV::stop(){
+uint8_t AGV::stop(){
+
+	uint8_t j=0;
 
 	for (int i = 0; i < 4; ++i)
 	{
 		if(m[i].getAdress() != -1){
 			m[i].stop();
+			j++;
 		}
 	}
+	return j;
 
 }
 
@@ -138,7 +145,7 @@ bool AGV::openBus(int bitrate){
     
     for (int i = 0; i < 4; ++i)
     {
-    	//1.Create socket
+    	//1.Create socket 
     	s[i] = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 
     	if (s[i] < 0) {
@@ -146,7 +153,11 @@ bool AGV::openBus(int bitrate){
 	        return 1;
     	}
 
-    	 //2.Specify can0 device
+    	//2.Set socket to non-blocking
+
+    	fcntl(s[i], F_SETFL, O_NONBLOCK);
+
+    	//3.Specify can0 device
 	    strcpy(ifr[i].ifr_name, "can0");
 	    ret[i] = ioctl(s[i], SIOCGIFINDEX, &ifr[i]);
 	    if (ret[i] < 0) {
@@ -155,7 +166,7 @@ bool AGV::openBus(int bitrate){
         }
 
 
-        //3.Bind the socket to can0
+        //4.Bind the socket to can0
 	    addr[i].can_family = AF_CAN;
 	    addr[i].can_ifindex = ifr[i].ifr_ifindex;
 	    ret[i] = bind(s[i], (struct sockaddr *)&addr[i], sizeof(addr[0]));
@@ -164,14 +175,14 @@ bool AGV::openBus(int bitrate){
 	        return 1;
 	    }
 
-	    //4.Define receive rules
+	    //5.Define receive rules
 	    rfilter[i].can_id = (m[i].getAdress() << 7); //Ids beggining with correct address
     	rfilter[i].can_mask = (m[i].getAdress() << 7);//All lower bits are don't cares
     	printf("Added filter to motor address : %i \r\n",m[i].getAdress()<<7);
     	setsockopt(s[i], SOL_CAN_RAW, CAN_RAW_FILTER, &rfilter[i], sizeof(rfilter[0]));
 	
 
-		//5.Give to motors socket handle
+		//6.Give to motors socket handle
 
 		m[i].setHdl(s[i]);
 

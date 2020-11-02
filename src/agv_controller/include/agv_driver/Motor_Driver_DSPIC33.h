@@ -23,11 +23,16 @@ class Motor
 {
 	public:
 		Motor(int motor_addess);
-		void readVelEncoder();
-		void readPosEncoder();
-		void readPos();
 
-		void readVel(); //Reads from PIC
+		/*Methods for reading pic*/
+		void readPos();
+		void readVel();
+		void readPosEncoder();
+		void readVelEncoder();
+
+		/*Read certain number of bytes on can bus*/
+		bool readCAN(uint8_t nbytes);
+
 
 
 		int16_t getVel(); //Gets the value

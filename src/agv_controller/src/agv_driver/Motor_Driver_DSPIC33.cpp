@@ -8,19 +8,17 @@ Motor::Motor(int motor_address){
 	
 }
 
-bool Motor::getState(){
 
-	return state;
-}
+bool Motor::readCAN(){
+	//Frame is supposed to contain nbytes, read is non blocking
+	//read returns number of bytes read
+	int nbytes = 0;
+	nbytes = read(s,&frame,sizeof(frame));
 
+	if
 
-
-bool Motor::setHdl(int s){
-
-	this->s=s;
 	return true;
 }
-
 
 void Motor::readPos(){
 	//Add some filtering to get right motor
@@ -103,11 +101,12 @@ void Motor::writePos(uint16_t pos){
 
 }
 
+
+
 int Motor::getAdress(){
 
 	return address;
 }
-
 
 int16_t Motor::getVel(){
 
@@ -122,4 +121,15 @@ uint16_t Motor::getPos(){
 int16_t Motor::getTorque(){
 
 	return torque_encoder;
+}
+
+bool Motor::getState(){
+
+	return state;
+}
+
+bool Motor::setHdl(int s){
+
+	this->s=s;
+	return true;
 }

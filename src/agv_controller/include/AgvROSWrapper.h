@@ -5,6 +5,7 @@
 #include "agv_driver/AGV_Driver.h"
 #include "geometry_msgs/Twist.h"
 #include "std_srvs/Trigger.h"
+#include <string>
 
 
 
@@ -16,8 +17,8 @@ class AgvROSWrapper
 
 		bool setVel(geometry_msgs::TwistPtr twistptr);
 		geometry_msgs::TwistPtr getVel();
-		void start();
-		void stop();
+		uint8_t start();
+		uint8_t stop();
 
 
 	private:
@@ -29,18 +30,23 @@ class AgvROSWrapper
        	//Publishers and subscribers
        	ros::Publisher current_speed_publisher;
        	ros::Subscriber speed_command_subscriber;
+              //Services
        	ros::ServiceServer stop_motor_server;
        	ros::ServiceServer start_motor_server;
+              ros::ServiceServer open_bus_server;
+              ros::ServiceServer close_bus_server;
 
        	ros::Timer current_speed_timer;
 
-       	//Callbacks
-
+       	//Callbacks for services
        	bool callbackStop(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
        	bool callbackStart(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
-       	//void callbackCurrentSpeedPublisher();
+              bool callbackOpenBus(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
+              bool callbackCloseBus(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
+              void callbackSpeedCommand(const geometry_msgs::Twist &msg);
+       	
        	void publishCurrentSpeed(const ros::TimerEvent &event);
-       	void callbackSpeedCommand(const geometry_msgs::Twist &msg);
+       	
 
        	double current_speed_hz;
 
