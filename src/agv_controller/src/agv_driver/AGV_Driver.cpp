@@ -11,14 +11,14 @@ actual dx, dy, dyaw via inverse kinematics*/
 
 void AGV::readVel(void){
 
-	int16_t v[4];
+	int16_t w[4];
 
 	
 	for (int i = 0; i < 4; ++i)
 	{
 		if(m[i].getState() == true){
 			m[i].readEncoder(); //Updates values from encoders
-			v[i] = m[i].getVel();
+			w[i] = m[i].getVel();
 
 			//Debugging
 			//printf("Read position,velocity,torque : %i %d %i motor %i\r\n",
@@ -33,9 +33,16 @@ void AGV::readVel(void){
 	//Let's compute dx,dy,dyaw
 
 	/*TODO adjust signs after testing*/
-	vel_sens[0] = (Rr/4)*(v[0] - v[1] + v[2] - v[3])/(H*Z);
-	vel_sens[1] = (Rr/4)*(v[0] + v[1] + v[2] + v[3])/(H*Z);
-	vel_sens[2] = (Rr/4)*((-1/(La+Lb))*(v[0]+v[3])+(1/(La+Lb))*(v[1]+v[3]))/(H*Z);
+	//05.10.2020
+	vel_sens[0] = (Rr/4)*(-w[1]+w[0]+w[3]-w[2])/F;
+	vel_sens[1] = (Rr/4)*(-w[1]-w[0]-w[3]+w[2])/F;
+	vel_sens[2] = (Rr/4)*(1/(La+Lb))*(-w[1]-w[0]-w[2]-w[3])/F;
+	
+	//This term corresponds to kinematic constraints
+	vel_sens[3] = (-w[1]+w[0]-w[3]+w[2])/F;
+	//vel_sens[0] = (Rr/4)*(v[0] - v[1] + v[2] - v[3])/(H*Z);
+	//vel_sens[1] = (Rr/4)*(v[0] + v[1] + v[2] + v[3])/(H*Z);
+	//vel_sens[2] = (Rr/4)*((-1/(La+Lb))*(v[0]+v[3])+(1/(La+Lb))*(v[1]+v[3]))/(H*Z);
 
 }
 
@@ -71,6 +78,7 @@ void AGV::writeVel( double vel[3] ){
 	// m_v[3] = -(1/Rr)*(Vx+Vy+(La+Lb))*F*Z;
 
 	//0 and 3 are same direction and 1 and 2 same opposite direction to 0 & 3
+	//Vx and Vy working, not tested Vz
 	m_v[0] = (1/Rr)*(Vx-Vy-(La+Lb)*Vz)*F*Z;
 	m_v[1] = (1/Rr)*(-Vx-Vy-(La+Lb)*Vz)*F*Z; 
 	m_v[2] = (1/Rr)*(-Vx+Vy-(La+Lb)*Vz)*F*Z;
