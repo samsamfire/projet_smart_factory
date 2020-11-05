@@ -10,8 +10,12 @@ Motor::Motor(int motor_address){
 
 int16_t Motor::readEncoderDirect(){
 
-	read(s, &frame, sizeof(frame));
-	vel_encoder = (frame.data[3] << 8) + frame.data[2];
+	if(read(s, &frame, sizeof(frame)>0)){
+		vel_encoder = (frame.data[3] << 8) + frame.data[2];
+	}
+	else{
+		printf("Error reading\r\n");
+	}
 
 	return vel_encoder;
 
