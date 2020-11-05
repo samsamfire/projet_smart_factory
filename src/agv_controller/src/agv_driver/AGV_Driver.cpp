@@ -21,7 +21,7 @@ void AGV::readVel(void){
 			w[i] = m[i].readEncoderDirect();
 
 			//Debugging
-			printf("Read position,velocity,socket : %i %d %i\r\n", m[i].getPos(),w[i],m[i].getHdl());
+			//printf("Read position,velocity,socket : %i %d %i\r\n", m[i].getPos(),w[i],m[i].getHdl());
 		}
 
 		else{
@@ -35,9 +35,9 @@ void AGV::readVel(void){
 	//05.10.2020
 	//vel_sens[0] = w[0];
 	
-	 //vel_sens[0] = (Rr/4)*(-w[1]+w[0]+w[3]-w[2])/F;
+	 vel_sens[0] = (Rr/4)*(-w[1]+w[0]+w[3]-w[2])/F;
 	//vel_sens[0] = -w[1]+w[0]+w[3]-w[2];
-	 printf("Speed read : %f \r\n",vel_sens[0]);
+	 //printf("Speed read : %f \r\n",vel_sens[0]);
 	// vel_sens[1] = (Rr/4)*(-w[1]-w[0]-w[3]+w[2])/F;
 	// vel_sens[2] = (Rr/4)*(1/(La+Lb))*(-w[1]-w[0]-w[2]-w[3])/F;
 
