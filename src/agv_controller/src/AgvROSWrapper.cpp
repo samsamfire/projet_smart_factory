@@ -57,6 +57,7 @@ void AgvROSWrapper::publishCurrentSpeed(const ros::TimerEvent &event){
 	msg.linear.y = vel[1];
 	msg.angular.z = vel[2];
 
+
 	current_speed_publisher.publish(msg);
 
 }

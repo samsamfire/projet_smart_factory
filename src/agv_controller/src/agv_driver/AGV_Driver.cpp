@@ -71,16 +71,16 @@ void AGV::writeVel( double vel[3] ){
 	// m_v[3] = -(1/Rr)*(Vx+Vy+(La+Lb))*F*Z;
 
 	//0 and 3 are same direction and 1 and 2 same opposite direction to 0 & 3
-	m_v[0] = Vx*F*Z;
-	m_v[1] = - Vx*F*Z; 
-	m_v[2] = - Vx*F*Z;
-	m_v[3] = Vx*F*Z;
+	m_v[0] = (1/Rr)*(Vx-Vy-(La+Lb)*Vz)*F*Z;
+	m_v[1] = (1/Rr)*(-Vx-Vy-(La+Lb)*Vz)*F*Z; 
+	m_v[2] = (1/Rr)*(-Vx+Vy-(La+Lb)*Vz)*F*Z;
+	m_v[3] = (1/Rr)*(Vx+Vy-(La+Lb)*Vz)*F*Z;
 
 	for (int i = 0; i < 4; ++i)
 	{
 		//Check if motor is activated
 		if(m[i].getState() == 1){
-			printf("Sending speed of %i to motor %i\r\n",m_v[i],i);
+			printf("Sending speed of %i rad/s to motor %i\r\n",m_v[i],i);
 			m[i].writeVel(m_v[i]);
 		}
 		else{
@@ -120,9 +120,10 @@ uint8_t AGV::stop(){
 	for (int i = 0; i < 4; ++i)
 	{
 		if(m[i].getAdress() != -1){
-			m[i].stop();
-			//Set speeds to 0 also
 			m[i].writeVel(0);
+			//Set speeds to 0 also
+			m[i].stop();
+			
 			j++;
 		}
 	}

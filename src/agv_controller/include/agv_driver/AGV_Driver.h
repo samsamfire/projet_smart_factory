@@ -14,10 +14,10 @@
 #include <linux/can/raw.h>
 #include <stdint.h>
 
-#define Rr 0.05 //Rayon de la roue en m
+#define Rr 0.045 //Rayon de la roue en m
 #define Z 1 //Rapport de reduction
-#define La 0.2//Demie longueur
-#define Lb 0.3 //Demie largeur
+#define La 0.225//Demie longueur
+#define Lb 0.20 //Demie largeur
 /*Facteur d'aggrandissment pour ne pas perdre trop d'informations
 Lors de l'envoie des vitesses, il faudra prendre ca en compte dans le micro
 Cela suppose que les vitesses sont contenus entre -30m/s et +30m/s(largement le cas)
