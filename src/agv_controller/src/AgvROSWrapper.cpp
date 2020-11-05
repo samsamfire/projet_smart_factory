@@ -10,7 +10,7 @@ AgvROSWrapper::AgvROSWrapper(ros::NodeHandle *nh,int ad_fl,int ad_fr,int ad_br, 
 
 	if (!ros::param::get("~speed_publisher_frequency", current_speed_hz))
 	{
-		current_speed_hz = 50;
+		current_speed_hz = 20;
 	}
 
 //Instantiate smart pointer
