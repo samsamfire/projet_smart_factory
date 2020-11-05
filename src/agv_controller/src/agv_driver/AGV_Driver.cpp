@@ -11,7 +11,7 @@ actual dx, dy, dyaw via inverse kinematics*/
 
 void AGV::readVel(void){
 
-	int16_t w[4];
+	int16_t w[4] = {0};
 
 	
 	for (int i = 0; i < 4; ++i)
@@ -21,8 +21,8 @@ void AGV::readVel(void){
 			w[i] = m[i].getVel();
 
 			//Debugging
-			//printf("Read position,velocity,torque : %i %d %i motor %i\r\n",
-			//	m[i].getPos(),m[i].getVel(),m[i].getTorque(),i);
+			printf("Read position,velocity,torque : %i %d %i motor %i\r\n",
+				m[i].getPos(),w[i],m[i].getTorque(),i);
 		}
 
 		else{
@@ -37,7 +37,7 @@ void AGV::readVel(void){
 	//vel_sens[0] = w[0];
 	
 	 //vel_sens[0] = (Rr/4)*(-w[1]+w[0]+w[3]-w[2])/F;
-	vel_sens[0] = -w[1]+w[0]+w[3]-w[2];
+	//vel_sens[0] = -w[1]+w[0]+w[3]-w[2];
 	 printf("Speed read : %f \r\n",vel_sens[0]);
 	// vel_sens[1] = (Rr/4)*(-w[1]-w[0]-w[3]+w[2])/F;
 	// vel_sens[2] = (Rr/4)*(1/(La+Lb))*(-w[1]-w[0]-w[2]-w[3])/F;
