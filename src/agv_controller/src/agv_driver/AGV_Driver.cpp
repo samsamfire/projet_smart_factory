@@ -26,7 +26,7 @@ void AGV::readVel(void){
 		}
 
 		else{
-			//printf("Motor is %i is not on\r\n",i);
+			printf("Motor is %i is not on\r\n",i);
 		}
 		
 	}
@@ -34,13 +34,15 @@ void AGV::readVel(void){
 
 	/*TODO adjust signs after testing*/
 	//05.10.2020
-	vel_sens[0] = w[0];
-	// vel_sens[0] = (Rr/4)*(-w[1]+w[0]+w[3]-w[2])/F;
+	//vel_sens[0] = w[0];
+	 vel_sens[0] = (Rr/4)*(-w[1]+w[0]+w[3]-w[2])/F;
 	// vel_sens[1] = (Rr/4)*(-w[1]-w[0]-w[3]+w[2])/F;
 	// vel_sens[2] = (Rr/4)*(1/(La+Lb))*(-w[1]-w[0]-w[2]-w[3])/F;
 
 	// //This term corresponds to kinematic constraints
 	// vel_sens[3] = (-w[1]+w[0]-w[3]+w[2])/F;
+
+
 	//vel_sens[0] = (Rr/4)*(v[0] - v[1] + v[2] - v[3])/(H*Z);
 	//vel_sens[1] = (Rr/4)*(v[0] + v[1] + v[2] + v[3])/(H*Z);
 	//vel_sens[2] = (Rr/4)*((-1/(La+Lb))*(v[0]+v[3])+(1/(La+Lb))*(v[1]+v[3]))/(H*Z);
