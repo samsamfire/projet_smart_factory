@@ -17,12 +17,11 @@ void AGV::readVel(void){
 	for (int i = 0; i < 4; ++i)
 	{
 		if(m[i].getState() == true){
-			m[i].readEncoder(); //Updates values from encoders
-			w[i] = m[i].getVel();
+			//m[i].readEncoder(); //Updates values from encoders
+			w[i] = m[i].readEncoderDirect();
 
 			//Debugging
-			printf("Read position,velocity,torque : %i %d %i motor %i\r\n",
-				m[i].getPos(),w[i],m[i].getTorque(),i);
+			printf("Read position,velocity,socket : %i %d %i\r\n", m[i].getPos(),w[i],m[i].getHdl());
 		}
 
 		else{

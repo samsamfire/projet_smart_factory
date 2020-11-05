@@ -50,7 +50,10 @@ class Motor
 		bool getState();
 
 		bool setHdl(int s);
+		uint8_t getHdl();
 		int getAdress();
+
+		int16_t readEncoderDirect();
 		
 
 

@@ -131,6 +131,7 @@ bool AgvROSWrapper::callbackStart(std_srvs::Trigger::Request &req, std_srvs::Tri
 
 bool AgvROSWrapper::callbackOpenBus(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response & res){
 	/*TODO add optional bitarate via usage of std_msgs*/ 
+
 	agv->openBus(500000);
 	int bitrate = 500000;
 	res.success = true;

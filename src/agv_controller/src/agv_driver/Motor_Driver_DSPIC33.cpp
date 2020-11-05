@@ -8,6 +8,15 @@ Motor::Motor(int motor_address){
 	
 }
 
+int16_t Motor::readEncoderDirect(){
+
+	read(s, &frame, sizeof(frame));
+	vel_encoder = (frame.data[3] << 8) + frame.data[2];
+
+	return vel_encoder;
+
+}
+
 
 bool Motor::readCAN(uint8_t nbyes){
 	//Frame is supposed to contain nbytes, read is non blocking
@@ -126,8 +135,15 @@ bool Motor::getState(){
 	return state;
 }
 
+
+
 bool Motor::setHdl(int s){
 
 	this->s=s;
 	return true;
+}
+
+uint8_t Motor::getHdl(){
+
+	return s;
 }
