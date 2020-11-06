@@ -10,7 +10,7 @@ AgvROSWrapper::AgvROSWrapper(ros::NodeHandle *nh,int ad_fl,int ad_fr,int ad_br, 
 
 	if (!ros::param::get("~speed_publisher_frequency", current_speed_hz))
 	{
-		current_speed_hz = 500;
+		current_speed_hz = 100;
 	}
 
 //Instantiate smart pointer
@@ -56,6 +56,10 @@ void AgvROSWrapper::publishCurrentSpeed(const ros::TimerEvent &event){
 	msg.linear.x = vel[0];
 	msg.linear.y = vel[1];
 	msg.angular.z = vel[2];
+	//This is to be modified in future and use a custom message type
+	//Currently makes it easy to use teleop keyboard with teleop keyboard
+
+	msg.angular.y = vel[3];
 
 
 	current_speed_publisher.publish(msg);

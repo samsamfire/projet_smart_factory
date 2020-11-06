@@ -29,6 +29,8 @@ class AgvROSWrapper
 
        	//Publishers and subscribers
        	ros::Publisher current_speed_publisher;
+             
+
        	ros::Subscriber speed_command_subscriber;
               //Services
        	ros::ServiceServer stop_motor_server;
@@ -46,7 +48,7 @@ class AgvROSWrapper
               void callbackSpeedCommand(const geometry_msgs::Twist &msg);
        	
        	void publishCurrentSpeed(const ros::TimerEvent &event);
-       	
+            
 
        	double current_speed_hz;
 
