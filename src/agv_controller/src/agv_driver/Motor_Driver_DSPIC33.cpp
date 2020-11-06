@@ -10,7 +10,7 @@ Motor::Motor(int motor_address){
 
 int16_t Motor::readEncoderDirect(){
 
-	if(read(s, &frame, sizeof(frame)>0)){
+	if(read(s, &frame, sizeof(frame))>0){
 		vel_encoder = (frame.data[3] << 8) + frame.data[2];
 	}
 	else{
