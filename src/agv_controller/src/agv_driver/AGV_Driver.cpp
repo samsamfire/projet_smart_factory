@@ -17,8 +17,8 @@ void AGV::readVel(void){
 	for (int i = 0; i < 4; ++i)
 	{
 		if(m[i].getState() == true){
-			//m[i].readEncoder(); //Updates values from encoders
-			w[i] = m[i].readEncoderDirect();
+			m[i].readEncoder(); //Updates values from encoders
+			w[i] = m[i].getVel();
 
 			//Debugging
 			//printf("Read position,velocity,socket : %i %d %i\r\n", m[i].getPos(),w[i],m[i].getHdl());
@@ -38,11 +38,11 @@ void AGV::readVel(void){
 	 vel_sens[0] = (Rr/4)*(-w[1]+w[0]+w[3]-w[2])/F;
 	//vel_sens[0] = -w[1]+w[0]+w[3]-w[2];
 	 //printf("Speed read : %f \r\n",vel_sens[0]);
-	// vel_sens[1] = (Rr/4)*(-w[1]-w[0]-w[3]+w[2])/F;
-	// vel_sens[2] = (Rr/4)*(1/(La+Lb))*(-w[1]-w[0]-w[2]-w[3])/F;
+	 vel_sens[1] = (Rr/4)*(-w[1]-w[0]-w[3]+w[2])/F;
+	 vel_sens[2] = (Rr/4)*(1/(La+Lb))*(-w[1]-w[0]-w[2]-w[3])/F;
 
 	// //This term corresponds to kinematic constraints
-	// vel_sens[3] = (-w[1]+w[0]-w[3]+w[2])/F;
+	 vel_sens[3] = (-w[1]+w[0]-w[3]+w[2])/F;
 
 
 	//vel_sens[0] = (Rr/4)*(v[0] - v[1] + v[2] - v[3])/(H*Z);
