@@ -70,11 +70,9 @@ void AGV::writeVel( double vel[4] ){
 	{
 		//Check if motor is activated
 		if(m[i].getState() == 1){
-			printf("Sending speed of %i rad/s to motor %i\r\n",m_v[i],i);
 			m[i].writeVel(m_v[i]);
 		}
 		else{
-			printf("Error motor %i is not on\r\n",i );
 		}
 		
 	}

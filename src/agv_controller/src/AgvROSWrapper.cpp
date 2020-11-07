@@ -11,6 +11,7 @@ AgvROSWrapper::AgvROSWrapper(ros::NodeHandle *nh,int ad_fl,int ad_fr,int ad_br, 
 	if (!ros::param::get("~speed_publisher_frequency", current_speed_hz))
 	{
 		current_speed_hz = 100;
+
 	}
 
 //Instantiate smart pointer
@@ -35,7 +36,7 @@ AgvROSWrapper::AgvROSWrapper(ros::NodeHandle *nh,int ad_fl,int ad_fr,int ad_br, 
 
 //Timer for PID correction of coupling control
 
-	update_pid_timer = nh->createTimer(ros::Duration(1.0/current_speed_hz),&AgvROSWrapper::callbackCouplingControl , this);
+	update_pid_timer = nh->createTimer(ros::Duration(1.0/50),&AgvROSWrapper::callbackCouplingControl , this);
 
 	kc_coupling = 2;
 
@@ -181,12 +182,12 @@ bool AgvROSWrapper::callbackCloseBus(std_srvs::Trigger::Request &req, std_srvs::
 
 void AgvROSWrapper::callbackCouplingControl(const ros::TimerEvent &event){
 
-	float dt  = 1/current_speed_hz;
+	float dt  = 1/50;
 	//Coupling error feedback
 	speed_cmd[3] += -dt*speed_encoder[3];
 
 	//No correction on actual robot speed for now, but maybe in the future
-	
+
 	agv->writeVel(speed_cmd);
 
 
