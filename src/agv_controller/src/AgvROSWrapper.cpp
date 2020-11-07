@@ -28,11 +28,25 @@ AgvROSWrapper::AgvROSWrapper(ros::NodeHandle *nh,int ad_fl,int ad_fr,int ad_br, 
 
 //This declares the publisher
 	current_speed_publisher = nh->advertise<geometry_msgs::Twist>("current_speed",10);
+
 //Add a timer routine to publish at current_speed_hz
 	current_speed_timer = nh->createTimer(ros::Duration(1.0/current_speed_hz),
 		&AgvROSWrapper::publishCurrentSpeed, this);
 
+//Timer for PID correction of coupling control
+
+	update_pid_timer = nh->createTimer(ros::Duration(1.0/current_speed_hz),&AgvROSWrapper::callbackCouplingControl , this);
+
+	kc_coupling = 2;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		speed_cmd[i] = 0;
+	}
+
 }
+
+
 
 uint8_t AgvROSWrapper::stop(){
 
@@ -46,20 +60,25 @@ uint8_t AgvROSWrapper::stop(){
 
 //This publishes to topic "current_speed" at a frequency given in parameter
 void AgvROSWrapper::publishCurrentSpeed(const ros::TimerEvent &event){
-
-	double* vel;
+	double * vel;
 	geometry_msgs::Twist msg;
 	//First call read vel
 	agv->readVel();
 	vel = agv->getVel();
 
-	msg.linear.x = vel[0];
-	msg.linear.y = vel[1];
-	msg.angular.z = vel[2];
-	//This is to be modified in future and use a custom message type
-	//Currently makes it easy to use teleop keyboard with teleop keyboard
+	//Update actual readings from encoder to object
+	speed_encoder[0] = vel[0];
+	speed_encoder[1] = vel[1];
+	speed_encoder[2] = vel[2];
+	speed_encoder[3] = vel[3];
 
-	msg.angular.y = vel[3];
+
+	//Prepare message to send
+	msg.linear.x = speed_encoder[0];
+	msg.linear.y = speed_encoder[1];
+	msg.angular.z = speed_encoder[2];
+	//speed_encoder[3] is unnecessary
+
 
 
 	current_speed_publisher.publish(msg);
@@ -73,17 +92,17 @@ void AgvROSWrapper::publishCurrentSpeed(const ros::TimerEvent &event){
 
 void AgvROSWrapper::callbackSpeedCommand(const geometry_msgs::Twist &msg){
 
-	double vel[3];
+	
 
-	vel[0] = (double) msg.linear.x;
-	vel[1] = (double) msg.linear.y;
-	vel[2] = (double) msg.angular.z;
+	speed_cmd[0] = (double) msg.linear.x;
+	speed_cmd[1] = (double) msg.linear.y;
+	speed_cmd[2] = (double) msg.angular.z;
 
 
 
-	agv->writeVel(vel);
+	//agv->writeVel(vel);
 
-	ROS_INFO("Sent new speed values to AGV : %f %f %f",vel[0],vel[1],vel[2]);
+	ROS_INFO("Sent new velocities to AGV : %f %f %f",speed_cmd[0],speed_cmd[1],speed_cmd[2]);
 
 	/*TODO -add verification that the request is captured*/
 
@@ -154,6 +173,29 @@ bool AgvROSWrapper::callbackCloseBus(std_srvs::Trigger::Request &req, std_srvs::
 	return true; 
 
 }
+
+
+
+
+
+
+void AgvROSWrapper::callbackCouplingControl(const ros::TimerEvent &event){
+
+	float dt  = 1/current_speed_hz;
+	//Coupling error feedback
+	speed_cmd[3] += -dt*speed_encoder[3];
+
+	//No correction on actual robot speed for now, but maybe in the future
+	
+	agv->writeVel(speed_cmd);
+
+
+}
+
+
+
+
+
 
 
 

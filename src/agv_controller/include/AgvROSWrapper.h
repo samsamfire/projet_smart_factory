@@ -39,6 +39,7 @@ class AgvROSWrapper
               ros::ServiceServer close_bus_server;
 
        	ros::Timer current_speed_timer;
+              ros::Timer update_pid_timer;
 
        	//Callbacks for services
        	bool callbackStop(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
@@ -46,11 +47,17 @@ class AgvROSWrapper
               bool callbackOpenBus(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
               bool callbackCloseBus(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
               void callbackSpeedCommand(const geometry_msgs::Twist &msg);
+
+              void callbackCouplingControl(const ros::TimerEvent &event);
        	
        	void publishCurrentSpeed(const ros::TimerEvent &event);
             
 
        	double current_speed_hz;
+
+              double speed_cmd[4];
+              double speed_encoder[4];
+              double kc_coupling;
 
 
 

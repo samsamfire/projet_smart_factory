@@ -40,42 +40,31 @@ void AGV::readVel(void){
 
 
 
-void AGV::writeVel( double vel[3] ){
+void AGV::writeVel( double vel[4] ){
 	
 	//Cinematic model:
 	this->vel[0] = vel[0];
 	this->vel[1] = vel[1];
 	this->vel[2] = vel[2];
+	this->vel[3] = vel[3];
 
 	double Vx = vel[0];
 	double Vy = vel[1];
 	double Vz = vel[2];
+	double e = vel[3];
 
 	int16_t m_v[4];
 
 	//https://www.fh-dortmund.de/roehrig/papers/roehrigCCTA17.pdf
 
-	// double J[4][3] = {
-	// 	{1.0,-1.0,-(La+Lb)},
-	// 	{1.0,1.0,La+Lb},
-	// 	{1.0,-1.0,-(La+Lb)},
-	// 	{1.0,1.0,(La+Lb)}
-	// };
-
 	
-//Check signs by testing
-
-	// m_v[0] = (1/Rr)*(Vx-Vy-(La+Lb))*F*Z;
-	// m_v[1] = -(1/Rr)*(Vx+Vy+(La+Lb))*F*Z;
-	// m_v[2] = (1/Rr)*(Vx-Vy-(La+Lb))*F*Z;
-	// m_v[3] = -(1/Rr)*(Vx+Vy+(La+Lb))*F*Z;
 
 	//0 and 3 are same direction and 1 and 2 same opposite direction to 0 & 3
 	//Vx and Vy working, not tested Vz
-	m_v[0] = (1/Rr)*(Vx-Vy-(La+Lb)*Vz)*F*Z;
-	m_v[1] = (1/Rr)*(-Vx-Vy-(La+Lb)*Vz)*F*Z; 
-	m_v[2] = (1/Rr)*(-Vx+Vy-(La+Lb)*Vz)*F*Z;
-	m_v[3] = (1/Rr)*(Vx+Vy-(La+Lb)*Vz)*F*Z;
+	m_v[0] = (1/Rr)*(Vx-Vy-(La+Lb)*Vz+e)*F*Z;
+	m_v[1] = (1/Rr)*(-Vx-Vy-(La+Lb)*Vz-e)*F*Z; 
+	m_v[2] = (1/Rr)*(-Vx+Vy-(La+Lb)*Vz+e)*F*Z;
+	m_v[3] = (1/Rr)*(Vx+Vy-(La+Lb)*Vz-e)*F*Z;
 
 	for (int i = 0; i < 4; ++i)
 	{

@@ -72,7 +72,7 @@ private:
 
 	Motor m[4];
 
-	double vel[3],pos[3];
+	double vel[4],pos[3];
 	double vel_sens[4],pos_sens[3];
 
 	//CAN bus info
