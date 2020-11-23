@@ -1,0 +1,6 @@
+Invoking command in '/home/samsam/ProjetSmartFactory/src/build/ros2-agv-wrapper': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/samsam/ProjetSmartFactory/src/ros2-agv-wrapper -DCMAKE_INSTALL_PREFIX=/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper
+Invoked command in '/home/samsam/ProjetSmartFactory/src/build/ros2-agv-wrapper' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/samsam/ProjetSmartFactory/src/ros2-agv-wrapper -DCMAKE_INSTALL_PREFIX=/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper
+Invoking command in '/home/samsam/ProjetSmartFactory/src/build/ros2-agv-wrapper': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/samsam/ProjetSmartFactory/src/build/ros2-agv-wrapper -- -j8 -l8
+Invoked command in '/home/samsam/ProjetSmartFactory/src/build/ros2-agv-wrapper' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/samsam/ProjetSmartFactory/src/build/ros2-agv-wrapper -- -j8 -l8
+Invoking command in '/home/samsam/ProjetSmartFactory/src/build/ros2-agv-wrapper': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/samsam/ProjetSmartFactory/src/build/ros2-agv-wrapper
+Invoked command in '/home/samsam/ProjetSmartFactory/src/build/ros2-agv-wrapper' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/samsam/ProjetSmartFactory/src/build/ros2-agv-wrapper

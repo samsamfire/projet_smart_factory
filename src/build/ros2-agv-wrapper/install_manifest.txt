@@ -1,0 +1,15 @@
+/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper/share/ament_index/resource_index/package_run_dependencies/ros2-agv-wrapper
+/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper/share/ament_index/resource_index/parent_prefix_path/ros2-agv-wrapper
+/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper/share/ros2-agv-wrapper/environment/ament_prefix_path.sh
+/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper/share/ros2-agv-wrapper/environment/ament_prefix_path.dsv
+/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper/share/ros2-agv-wrapper/environment/path.sh
+/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper/share/ros2-agv-wrapper/environment/path.dsv
+/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper/share/ros2-agv-wrapper/local_setup.bash
+/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper/share/ros2-agv-wrapper/local_setup.sh
+/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper/share/ros2-agv-wrapper/local_setup.zsh
+/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper/share/ros2-agv-wrapper/local_setup.dsv
+/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper/share/ros2-agv-wrapper/package.dsv
+/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper/share/ament_index/resource_index/packages/ros2-agv-wrapper
+/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper/share/ros2-agv-wrapper/cmake/ros2-agv-wrapperConfig.cmake
+/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper/share/ros2-agv-wrapper/cmake/ros2-agv-wrapperConfig-version.cmake
+/home/samsam/ProjetSmartFactory/src/install/ros2-agv-wrapper/share/ros2-agv-wrapper/package.xml
