@@ -1,4 +1,3 @@
-[submodule "agv_driver"]
-	path = agv_driver
-	url = https://github.com/samsamfire/agv_driver
-	branch = feature_test
+[submodule "src/ros2-agv-wrapper/driver"]
+	path = src/ros2-agv-wrapper/driver
+	url = https://github.com/samsamfire/LinuxAgvDriver

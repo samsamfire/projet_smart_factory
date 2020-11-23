@@ -19,7 +19,24 @@ endif()
 find_package(ament_cmake REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+
+
+
+
+add_executable(agv-wrapper src/AGVRos2Wrapper.cpp driver/src/AGV_Driver.cpp driver/src/Motor_Driver_DSPIC33.cpp)
+ament_target_dependencies(agv-wrapper rclcpp std_msgs geometry_msgs std_srvs)
+
+
+
+install(TARGETS
+  agv-wrapper
+  DESTINATION lib/${PROJECT_NAME})
+
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
