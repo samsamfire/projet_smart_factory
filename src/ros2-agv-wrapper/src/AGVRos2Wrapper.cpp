@@ -20,7 +20,7 @@ AgvROSWrapper::AgvROSWrapper(std::shared_ptr<rclcpp::Node> nh,int ad_fl,int ad_f
 // 	/*Services*/
  	stop_motor_server = nh->create_service<std_srvs::srv::Trigger>("stop_driver", std::bind(&AgvROSWrapper::callbackStop,
                                                                      this, _1, _2, _3));
- 	start_motor_server = nh->create_service<std_srvs::srv::Trigger>("stop_driver", std::bind(&AgvROSWrapper::callbackStart,
+ 	start_motor_server = nh->create_service<std_srvs::srv::Trigger>("start_driver", std::bind(&AgvROSWrapper::callbackStart,
                                                                      this, _1, _2, _3));
 // 	open_bus_server = nh->advertiseService("open_bus",&AgvROSWrapper::callbackOpenBus,this);
 // 	close_bus_server = nh->advertiseService("close_bus",&AgvROSWrapper::callbackCloseBus,this);
