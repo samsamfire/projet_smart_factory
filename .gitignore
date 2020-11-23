@@ -1,6 +1,6 @@
 # Specify filepatterns you want git to ignore.
 
 build/*
-devel/*
 install/* 
+log/*
 
