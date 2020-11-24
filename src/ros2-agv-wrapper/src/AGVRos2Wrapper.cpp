@@ -96,12 +96,12 @@ void AgvROSWrapper::callbackSpeedCommand(const geometry_msgs::msg::Twist::Shared
 	speed_cmd[0] = (double) msg->linear.x;
 	speed_cmd[1] = (double) msg->linear.y;
 	speed_cmd[2] = (double) msg->angular.z;
+	speed_cmd[3] = 0;
 
 
+	agv->writeVel(speed_cmd);
 
-	//agv->writeVel(vel);
-
-	//ROS_INFO("Sent new velocities to AGV : %f %f %f",speed_cmd[0],speed_cmd[1],speed_cmd[2]);
+	RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Sent new velocities to AGV : %f %f %f",speed_cmd[0],speed_cmd[1],speed_cmd[2]);
 
 	/*TODO -add verification that the request is captured*/
 
