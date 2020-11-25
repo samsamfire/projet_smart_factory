@@ -11,11 +11,12 @@ int main(int argc, char ** argv)
 
   RCLCPP_INFO(node->get_logger(),"Started sensors node");
 
-  MPU6050Wrapper mpu6050_wrapper(node);
+  //PU6050Wrapper mpu6050_wrapper(node);
 
   rclcpp::spin(node);
 
 
+  RCLCPP_INFO(node->get_logger(),"Exiting ...");
   rclcpp::shutdown();
 
   
