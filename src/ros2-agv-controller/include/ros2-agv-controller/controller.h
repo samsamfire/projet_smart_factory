@@ -28,7 +28,7 @@ private:
 
 	rclcpp::TimerBase::SharedPtr pid_timer;
 
-	bool callbackUserSpeedCmd(const geometry_msgs::msg::Pose::SharedPtr msg);
+	bool callbackUserPositionCmd(const geometry_msgs::msg::Pose::SharedPtr msg);
 
 	void callbackPublishSpeedCmd();
 
@@ -43,6 +43,8 @@ private:
 	double pos_cmd[4];
 	double speed_encoder[4];
 	double pxw,pyw;
+
+	double prev_errorx;
 
 	double px,py;
 	double errorx,errory;
