@@ -3,13 +3,13 @@
 
 int main(int argc, char ** argv)
 {
-  (void) argc;
-  (void) argv;
 
 
   rclcpp::init(argc, argv);
 
   std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("agv_sensors");
+
+  RCLCPP_INFO(node->get_logger(),"Started sensors node");
 
   rclcpp::spin(node);
 

@@ -29,18 +29,18 @@ find_package(sensor_msgs REQUIRED)
 #pkg_check_modules( libi2c REQUIRED libi2c )
 #FIND_LIBRARY(mylib_LIBRARIES i2c)
 
-add_executable(agv_sensors src/agv_sensors.cpp src/MPU6050.cpp src/MPU6050ROSWrapper.cpp)
-ament_target_dependencies(agv_sensors rclcpp sensor_msgs)
+add_executable(agv-sensors src/agv_sensors.cpp src/MPU6050.cpp src/MPU6050ROSWrapper.cpp)
+ament_target_dependencies(agv-sensors rclcpp sensor_msgs)
 
-target_link_libraries(agv_sensors i2c)
+target_link_libraries(agv-sensors i2c)
 
 
 
-target_include_directories(agv_sensors PUBLIC
+target_include_directories(agv-sensors PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-install(TARGETS agv_sensors
+install(TARGETS agv-sensors
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
