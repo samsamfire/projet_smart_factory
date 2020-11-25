@@ -18,7 +18,7 @@ public:
 
 private:
 
-	std::unique_ptr<MPU6050> imu;
+	MPU6050 imu;
 
 	std::shared_ptr<rclcpp::Node> nh;
 

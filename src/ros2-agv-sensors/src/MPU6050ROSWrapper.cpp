@@ -2,7 +2,7 @@
 
 
 
-MPU6050Wrapper::MPU6050Wrapper(std::shared_ptr<rclcpp::Node> nh){
+MPU6050Wrapper::MPU6050Wrapper(std::shared_ptr<rclcpp::Node> nh) : imu(0x68) {
 
 
 	imu_publisher = nh->create_publisher<sensor_msgs::msg::Imu>("imu_readings",10);
@@ -13,7 +13,6 @@ MPU6050Wrapper::MPU6050Wrapper(std::shared_ptr<rclcpp::Node> nh){
 
 
 	RCLCPP_INFO(nh->get_logger(),"Initializing MPU6050 at address 0x68");
-	imu.reset(new MPU6050(0x68));
 
 
 }
@@ -29,10 +28,10 @@ void MPU6050Wrapper::publishImuReadings(){
 	float roll,pitch,yaw;
 	float roll_angle,pitch_angle,yaw_angle;
 
-	imu->getGyro(&roll,&pitch,&yaw);
-	imu->getAngle(0,&roll_angle);
-	imu->getAngle(1,&pitch_angle);
-	imu->getAngle(2,&yaw_angle);
+	imu.getGyro(&roll,&pitch,&yaw);
+	imu.getAngle(0,&roll_angle);
+	imu.getAngle(1,&pitch_angle);
+	imu.getAngle(2,&yaw_angle);
 
 	/*TODO, add quaternion data*/
 

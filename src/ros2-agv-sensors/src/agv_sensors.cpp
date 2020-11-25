@@ -11,7 +11,7 @@ int main(int argc, char ** argv)
 
   RCLCPP_INFO(node->get_logger(),"Started sensors node");
 
-  //PU6050Wrapper mpu6050_wrapper(node);
+  MPU6050Wrapper mpu6050_wrapper(node);
 
   rclcpp::spin(node);
 
