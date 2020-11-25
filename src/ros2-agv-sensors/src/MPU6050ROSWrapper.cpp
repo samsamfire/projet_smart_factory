@@ -21,7 +21,7 @@ MPU6050Wrapper::MPU6050Wrapper(std::shared_ptr<rclcpp::Node> nh) : imu(0x68) {
 
 void MPU6050Wrapper::publishImuReadings(){
 
-	RCLCPP_INFO_ONCE(nh->get_logger(),"Started publishing IMU readings");
+	//RCLCPP_INFO_ONCE(nh->get_logger(),"Started publishing IMU readings");
 
 	sensor_msgs::msg::Imu msg;
 
