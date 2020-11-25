@@ -1,6 +1,17 @@
 agv_controller:
   ros__parameters:
     pid_update_rate: 100.0
-    Kpx: 2.0
+    anti_windup: 0.3
+    Kpx: 10.0
+    Kdx: 0.1
+    Kix: 0.01
+
+    Kpy: 10.0
+    Kdy: 0.1
+    Kiy: 0.01
+
+
+
+
     Kpy: 2.1
     Kpdtheta: 2.0

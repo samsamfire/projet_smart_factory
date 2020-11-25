@@ -47,11 +47,6 @@ PosController::PosController() : Node("agv_controller")
 		pos_cmd[i] = 0;
 		speed_encoder[i] = 0;
 	}
-	pxw = 0;
-	pyw = 0;
-	itermx = 0;
-	dtermx = 0;
-	prev_errorx = 0;
 
 
 }
@@ -110,8 +105,7 @@ void PosController::updatePid(){
 
 	geometry_msgs::msg::Twist msg;
 
-	
-	double errorx;
+	double pos_ctrl[4];
 		
 	double vxr = speed_encoder[0];
 	double vyr = speed_encoder[1];	
@@ -123,47 +117,55 @@ void PosController::updatePid(){
 	pyw += vyr*dt;
 	//theta +=vthetar*dt;
 
-	errorx = (double) pos_cmd[0]-pxw;
+	errorx = (double) pos_cmd[0] - pxw;
+	errory = (double) pos_cmd[1] - pyw;
 
 
 	dtermx = (double) Kdx*(errorx-prev_errorx)/dt;
+	dtermy = (double) Kdy*(errory-prev_errory)/dt;
 
 
 	itermx += (double) Kix*errorx*dt;
+	itermy += (double) Kiy*errory*dt;
 	
 
 	itermx = limit(itermx,0.25,-0.25);
+	itermy = limit(itermy,0.25,-0.25);
 	
 
-	//pos_ctrl[0] =(double) Kpx*(pos_cmd[0]-pxw) + itermx + dtermx;
+	pos_ctrl[0] =(double) Kpx*(pos_cmd[0]-pxw) + itermx + dtermx;
+	pos_ctrl[1] =(double) Kpy*(pos_cmd[1]-pyw) + itermy + dtermy;
 
-	//pos_ctrl[0] = limit(pos_ctrl[0],0.3,-0.3);
+	pos_ctrl[0] = limit(pos_ctrl[0],0.3,-0.3);
+	pos_ctrl[1] = limit(pos_ctrl[1],0.3,-0.3);
+
+	pos_ctrl[2] = 0;
+	pos_ctrl[3] = 0;
 
 
-	msg.linear.x = (double) Kpx*(pos_cmd[0]-pxw) + itermx + dtermx;
-	msg.linear.y = 0;
+	
+
+	if(abs(errorx)< 0.015){
+		pos_ctrl[0] = 0;
+		itermx = 0;
+	}
+
+	if(abs(errory)< 0.015){
+		pos_ctrl[1] = 0;
+		itermy = 0;
+	}
+
+	msg.linear.x = pos_ctrl[0];
+	msg.linear.y = pos_ctrl[1];
 	msg.linear.z = 0;
 	msg.angular.z = 0;
 
 	speed_command_publisher->publish(msg);
-
-	if(abs(errorx)< 0.01){
-		//pos_ctrl[0] = 0;
-		itermx = 0;
-	}
-	else{
-
-		errorx = (double) pos_cmd[0]-pxw;
-
-	}
-
-
 	
 
 
-
-
 	prev_errorx = errorx;
+	prev_errory = errory;
 }
 
 
@@ -175,18 +177,45 @@ void PosController::getParams(){
 
 	//Parameter declarations
 
-	//this->declare_parameter("pid_update");
-	this->declare_parameter("Kpx",2.0);
-	this->declare_parameter("Kpy",2.0);
-	this->declare_parameter("Kpdtheta",2.0);
+	//General parameters
 	this->declare_parameter("pid_update_rate",100.0);
+	this->declare_parameter("anti_windup", 0.3);
+
+	//Pid x parameters
+	this->declare_parameter("Kpx",2.0);
+	this->declare_parameter("Kdx",2.0);
+	this->declare_parameter("Kix",2.0);
+	
+	//Pid y parameters
+
+	this->declare_parameter("Kpy",2.0);
+	this->declare_parameter("Kdy",2.0);
+	this->declare_parameter("Kiy",2.0);
+
+	//Pid dtheta parameters
+
+	this->declare_parameter("Kpdtheta",2.0);
+	
 
 	//Getting parameters
 
-	Kpx = this->get_parameter("Kpx").as_double();
-	Kpy = this->get_parameter("Kpy").as_double();
-	Kpdtheta = this->get_parameter("Kpdtheta").as_double();
+	anti_windup = this->get_parameter("anti_windup").as_double();
 	pid_update_rate = this->get_parameter("pid_update_rate").as_double();
+
+	Kpx = this->get_parameter("Kpx").as_double();
+	Kdx = this->get_parameter("Kdx").as_double();
+	Kix = this->get_parameter("Kix").as_double();
+
+	Kpy = this->get_parameter("Kpy").as_double();
+	Kdy = this->get_parameter("Kdy").as_double();
+	Kiy = this->get_parameter("Kiy").as_double();
+
+	
+
+
+
+	Kpdtheta = this->get_parameter("Kpdtheta").as_double();
+	
 
 
 }
