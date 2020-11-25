@@ -19,6 +19,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 #find_package(PkgConfig REQUIRED)
 
 
@@ -30,7 +31,7 @@ find_package(sensor_msgs REQUIRED)
 #FIND_LIBRARY(mylib_LIBRARIES i2c)
 
 add_executable(agv-sensors src/agv_sensors.cpp src/MPU6050.cpp src/MPU6050ROSWrapper.cpp)
-ament_target_dependencies(agv-sensors rclcpp sensor_msgs)
+ament_target_dependencies(agv-sensors rclcpp sensor_msgs std_srvs)
 
 target_link_libraries(agv-sensors i2c pthread)
 
@@ -42,6 +43,15 @@ target_include_directories(agv-sensors PUBLIC
 
 install(TARGETS agv-sensors
   DESTINATION lib/${PROJECT_NAME})
+
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}
+)
+install(DIRECTORY
+  config
+  DESTINATION share/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

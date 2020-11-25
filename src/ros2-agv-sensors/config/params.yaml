@@ -1,0 +1,8 @@
+agv_sensors:
+  ros__parameters:
+    gyrox_offset: 0.0
+    gyroy_offset: 0.0
+    gyroz_offset: 0.0
+    accelx_offset: 0.0
+    accely_offset: 0.0
+    accelz_offset: 0.0
