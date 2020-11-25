@@ -32,7 +32,7 @@ find_package(sensor_msgs REQUIRED)
 add_executable(agv-sensors src/agv_sensors.cpp src/MPU6050.cpp src/MPU6050ROSWrapper.cpp)
 ament_target_dependencies(agv-sensors rclcpp sensor_msgs)
 
-target_link_libraries(agv-sensors i2c)
+target_link_libraries(agv-sensors i2c pthread)
 
 
 
