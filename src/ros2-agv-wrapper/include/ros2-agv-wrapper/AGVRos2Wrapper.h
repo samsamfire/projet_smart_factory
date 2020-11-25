@@ -19,7 +19,7 @@ class AgvROSWrapper
 		geometry_msgs::msg::Twist * getVel();
 		uint8_t start();
 		uint8_t stop();
-              uint8_t emergency_stop();
+        uint8_t emergency_stop();
 
 
 	private:

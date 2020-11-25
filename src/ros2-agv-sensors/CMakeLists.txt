@@ -17,11 +17,25 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+#find_package(PkgConfig REQUIRED)
+
+
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
-add_executable(agv_sensors src/agv_sensors.cpp)
+#pkg_check_modules( libi2c REQUIRED libi2c )
+#FIND_LIBRARY(mylib_LIBRARIES i2c)
+
+add_executable(agv_sensors src/agv_sensors.cpp src/MPU6050.cpp src/MPU6050ROSWrapper.cpp)
+ament_target_dependencies(agv_sensors rclcpp sensor_msgs)
+
+target_link_libraries(agv_sensors i2c)
+
+
+
 target_include_directories(agv_sensors PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
