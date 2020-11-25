@@ -19,59 +19,60 @@ class AgvROSWrapper
 		geometry_msgs::msg::Twist * getVel();
 		uint8_t start();
 		uint8_t stop();
+              uint8_t emergency_stop();
 
 
 	private:
-		//Use ROS message for sending velocity commands
-       	geometry_msgs::msg::Twist *twist; 
-       	//Driver instance, using smart pointer type
-       	std::unique_ptr<AGV> agv;
+    //Use ROS message for sending velocity commands
+    geometry_msgs::msg::Twist *twist; 
+    //Driver instance, using smart pointer type
+    std::unique_ptr<AGV> agv;
 
-       	// //Publishers and subscribers
-       	// rclcpp::Publisher current_speed_publisher;
+    // //Publishers and subscribers
+    // rclcpp::Publisher current_speed_publisher;
 
-              //Services
-              rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr stop_motor_server;
-              rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr start_motor_server;
-              rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr open_bus_server;
-              rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr close_bus_server;
+    //Services
+    rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr stop_motor_server;
+    rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr start_motor_server;
+    rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr open_bus_server;
+    rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr close_bus_server;
 
-              //Publishers and subscribers
-              rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr current_speed_publisher;
-              rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr speed_command_subscriber;
+    //Publishers and subscribers
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr current_speed_publisher;
+    rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr speed_command_subscriber;
 
-       	// rclcpp::Subscriber speed_command_subscriber;
-
-
-              rclcpp::TimerBase::SharedPtr current_speed_timer;
+    // rclcpp::Subscriber speed_command_subscriber;
 
 
-       	// //Callbacks for services
-              
-              bool callbackStop(const std::shared_ptr<rmw_request_id_t> request_header,const std::shared_ptr<std_srvs::srv::Trigger_Request> req,
-                                       std::shared_ptr<std_srvs::srv::Trigger_Response> res);
-       	bool callbackStart(const std::shared_ptr<rmw_request_id_t> request_header,
-                                       const std::shared_ptr<std_srvs::srv::Trigger_Request> req,
-                                       std::shared_ptr<std_srvs::srv::Trigger_Response> res);
-               bool callbackOpenBus(const std::shared_ptr<rmw_request_id_t> request_header,
-                                       const std::shared_ptr<std_srvs::srv::Trigger_Request> req,
-                                       std::shared_ptr<std_srvs::srv::Trigger_Response> res);
-               bool callbackCloseBus(const std::shared_ptr<rmw_request_id_t> request_header,
-                                       const std::shared_ptr<std_srvs::srv::Trigger_Request> req,
-                                       std::shared_ptr<std_srvs::srv::Trigger_Response> res);
+    rclcpp::TimerBase::SharedPtr current_speed_timer;
 
 
-              void callbackSpeedCommand(const geometry_msgs::msg::Twist::SharedPtr msg);
+    // //Callbacks for services
 
-       	
-       	void publishCurrentSpeed();
-            
+    bool callbackStop(const std::shared_ptr<rmw_request_id_t> request_header,const std::shared_ptr<std_srvs::srv::Trigger_Request> req,
+                             std::shared_ptr<std_srvs::srv::Trigger_Response> res);
+    bool callbackStart(const std::shared_ptr<rmw_request_id_t> request_header,
+                             const std::shared_ptr<std_srvs::srv::Trigger_Request> req,
+                             std::shared_ptr<std_srvs::srv::Trigger_Response> res);
+     bool callbackOpenBus(const std::shared_ptr<rmw_request_id_t> request_header,
+                             const std::shared_ptr<std_srvs::srv::Trigger_Request> req,
+                             std::shared_ptr<std_srvs::srv::Trigger_Response> res);
+     bool callbackCloseBus(const std::shared_ptr<rmw_request_id_t> request_header,
+                             const std::shared_ptr<std_srvs::srv::Trigger_Request> req,
+                             std::shared_ptr<std_srvs::srv::Trigger_Response> res);
 
-       	double current_speed_hz;
 
-              double speed_cmd[4];
-              double speed_encoder[4];
-              double kc_coupling;
+    void callbackSpeedCommand(const geometry_msgs::msg::Twist::SharedPtr msg);
+
+
+    void publishCurrentSpeed();
+
+
+    double current_speed_hz;
+
+    double speed_cmd[4];
+    double speed_encoder[4];
+    double kc_coupling;
 
 
 

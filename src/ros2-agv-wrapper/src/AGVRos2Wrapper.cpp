@@ -18,6 +18,8 @@ AgvROSWrapper::AgvROSWrapper(std::shared_ptr<rclcpp::Node> nh,int ad_fl,int ad_f
 //Instantiate smart pointer
 	agv.reset(new AGV(ad_fl,ad_fr,ad_br,ad_bl));
 
+	current_speed_hz = 100;
+
 // 	/*Services*/
  	stop_motor_server = nh->create_service<std_srvs::srv::Trigger>("stop_driver", std::bind(&AgvROSWrapper::callbackStop,
                                                                      this, _1, _2, _3));
@@ -35,18 +37,8 @@ AgvROSWrapper::AgvROSWrapper(std::shared_ptr<rclcpp::Node> nh,int ad_fl,int ad_f
  	std::chrono::milliseconds speed_update_ms(static_cast<int>(1000.0 / (current_speed_hz)));
  	current_speed_timer = nh->create_wall_timer(std::chrono::duration_cast<std::chrono::milliseconds>(speed_update_ms),std::bind(&AgvROSWrapper::publishCurrentSpeed,this));
 
- 	speed_command_subscriber = nh->create_subscription<geometry_msgs::msg::Twist>("vel_cmd", 100, std::bind(&AgvROSWrapper::callbackSpeedCommand,this,_1));
+ 	speed_command_subscriber = nh->create_subscription<geometry_msgs::msg::Twist>("vel_cmd", 10, std::bind(&AgvROSWrapper::callbackSpeedCommand,this,_1));
 
-// //Timer for PID correction of coupling control
-
-// 	update_pid_timer = nh->createTimer(rclcpp::Duration(1.0/50),&AgvROSWrapper::callbackCouplingControl , this);
-
-// 	kc_coupling = 2;
-
-// 	for (int i = 0; i < 4; ++i)
-// 	{
-// 		speed_cmd[i] = 0;
-// 	}
 
 }
 
@@ -55,6 +47,11 @@ AgvROSWrapper::AgvROSWrapper(std::shared_ptr<rclcpp::Node> nh,int ad_fl,int ad_f
 uint8_t AgvROSWrapper::stop(){
 
  	return agv->stop();
+}
+
+uint8_t AgvROSWrapper::start(){
+
+	return agv->start();
 }
 
 
@@ -98,10 +95,11 @@ void AgvROSWrapper::callbackSpeedCommand(const geometry_msgs::msg::Twist::Shared
 	speed_cmd[2] = (double) msg->angular.z;
 	speed_cmd[3] = 0;
 
+	RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Sending new velocities to AGV : %f %f %f",speed_cmd[0],speed_cmd[1],speed_cmd[2]);
 
 	agv->writeVel(speed_cmd);
 
-	RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Sent new velocities to AGV : %f %f %f",speed_cmd[0],speed_cmd[1],speed_cmd[2]);
+	
 
 	/*TODO -add verification that the request is captured*/
 
