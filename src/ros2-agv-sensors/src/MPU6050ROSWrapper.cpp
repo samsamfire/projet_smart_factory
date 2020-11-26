@@ -31,7 +31,6 @@ MPU6050Wrapper::MPU6050Wrapper(std::shared_ptr<rclcpp::Node> nh) {
 	gz_off = nh->get_parameter("gyroz_offset").as_double();
 
 
-
 	imu.reset(new MPU6050(0x68));
 
 	RCLCPP_INFO(nh->get_logger(),"Initializing MPU6050 at address 0x68");
@@ -70,8 +69,8 @@ void MPU6050Wrapper::publishImuReadings(){
 	msg.angular_velocity.z = gz;
 
 	msg.linear_acceleration.x = ax;
-	msg.linear_acceleration.x = ay;
-	msg.linear_acceleration.x = az;
+	msg.linear_acceleration.y = ay;
+	msg.linear_acceleration.z = az;
 
 	imu_publisher->publish(msg);
 

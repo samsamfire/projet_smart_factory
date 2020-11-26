@@ -13,6 +13,7 @@ PosController::PosController() : Node("agv_controller")
 	user_command_subscriber = this->create_subscription<geometry_msgs::msg::Pose>("user_speed_cmd",10, std::bind(&PosController::callbackUserPositionCmd,this,_1));
 	current_speed_subscriber = this->create_subscription<geometry_msgs::msg::Twist>("current_speed",10, std::bind(&PosController::updateCurrentSpeed,this,_1));
 	speed_command_publisher = this->create_publisher<geometry_msgs::msg::Twist>("vel_cmd",10);
+	imu_readings_subscriber = this->create_subscription<sensor_msgs::msg::Imu>("imu_readings",10, std::bind(&PosController::getImuReadings,this,_1));
 
 
 	std::chrono::milliseconds pid_update_ms(static_cast<int>(1000.0 / (pid_update_rate)));
@@ -47,6 +48,19 @@ PosController::PosController() : Node("agv_controller")
 		pos_cmd[i] = 0;
 		speed_encoder[i] = 0;
 	}
+
+	RCLCPP_INFO(this->get_logger(),"Checking if Sensor node is running ...");
+
+	if(this->count_subscribers("imu_readings") == 1){
+
+		RCLCPP_INFO(this->get_logger(),"IMU is online");
+	}
+	else{
+
+		RCLCPP_INFO(this->get_logger(),"Sensor node must be running for the controller to work properly");
+	}
+
+
 
 
 }
@@ -84,6 +98,17 @@ void PosController::updateCurrentSpeed(const geometry_msgs::msg::Twist::SharedPt
 	RCLCPP_INFO_THROTTLE(this->get_logger(), clk,5000, "Received new current speed : Vx : %lf, Vy: %lf",speed_encoder[0],speed_encoder[1]);
 }
 
+void PosController::getImuReadings(const sensor_msgs::msg::Imu::SharedPtr msg){
+
+
+	//Get imu readings
+	//For now we only use dtheta;
+
+	this->dtheta = -(msg->angular_velocity.z*3.14159)/180;
+
+
+}
+
 
 double limit(double to_limit, double limit_max, double limit_min){
 
@@ -119,27 +144,32 @@ void PosController::updatePid(){
 
 	errorx = (double) pos_cmd[0] - pxw;
 	errory = (double) pos_cmd[1] - pyw;
+	//For now no dtheta command
+	errordtheta = (double) 0-dtheta;
 
 
 	dtermx = (double) Kdx*(errorx-prev_errorx)/dt;
 	dtermy = (double) Kdy*(errory-prev_errory)/dt;
+	dtermdtheta = (double) Kddtheta*(errordtheta- prev_errordtheta)/dt;
+
 
 
 	itermx += (double) Kix*errorx*dt;
 	itermy += (double) Kiy*errory*dt;
+	itermdtheta += (double) Kidtheta*errordtheta*dtheta;
 	
 
 	itermx = limit(itermx,0.25,-0.25);
 	itermy = limit(itermy,0.25,-0.25);
-	
+	itermdtheta = limit(itermdtheta,0.25,-0.25);
 
-	pos_ctrl[0] =(double) Kpx*(pos_cmd[0]-pxw) + itermx + dtermx;
-	pos_ctrl[1] =(double) Kpy*(pos_cmd[1]-pyw) + itermy + dtermy;
+	pos_ctrl[0] =(double) Kpx*errorx + itermx + dtermx;
+	pos_ctrl[1] =(double) Kpy*errory + itermy + dtermy;
+	pos_ctrl[2] =(double) Kpdtheta*errordtheta + itermdtheta + dtermdtheta;
 
 	pos_ctrl[0] = limit(pos_ctrl[0],0.3,-0.3);
 	pos_ctrl[1] = limit(pos_ctrl[1],0.3,-0.3);
-
-	pos_ctrl[2] = 0;
+	pos_ctrl[2] = limit(pos_ctrl[2],0.6,-0.6);
 	pos_ctrl[3] = 0;
 
 
@@ -155,10 +185,15 @@ void PosController::updatePid(){
 		itermy = 0;
 	}
 
+	if(abs(errordtheta)<0.015){
+		pos_ctrl[2] = 0;
+		itermdtheta = 0;
+	}
+
 	msg.linear.x = pos_ctrl[0];
 	msg.linear.y = pos_ctrl[1];
-	msg.linear.z = 0;
-	msg.angular.z = 0;
+
+	msg.angular.z = pos_ctrl[2];
 
 	speed_command_publisher->publish(msg);
 	
@@ -166,6 +201,7 @@ void PosController::updatePid(){
 
 	prev_errorx = errorx;
 	prev_errory = errory;
+	prev_errordtheta = errordtheta;
 }
 
 
@@ -183,18 +219,20 @@ void PosController::getParams(){
 
 	//Pid x parameters
 	this->declare_parameter("Kpx",2.0);
-	this->declare_parameter("Kdx",2.0);
-	this->declare_parameter("Kix",2.0);
+	this->declare_parameter("Kdx",0.1);
+	this->declare_parameter("Kix",0.01);
 	
 	//Pid y parameters
 
 	this->declare_parameter("Kpy",2.0);
-	this->declare_parameter("Kdy",2.0);
-	this->declare_parameter("Kiy",2.0);
+	this->declare_parameter("Kdy",0.1);
+	this->declare_parameter("Kiy",0.01);
 
 	//Pid dtheta parameters
 
 	this->declare_parameter("Kpdtheta",2.0);
+	this->declare_parameter("Kddtheta",0.001);
+	this->declare_parameter("Kidtheta",0.01);
 	
 
 	//Getting parameters
@@ -210,11 +248,10 @@ void PosController::getParams(){
 	Kdy = this->get_parameter("Kdy").as_double();
 	Kiy = this->get_parameter("Kiy").as_double();
 
-	
-
-
 
 	Kpdtheta = this->get_parameter("Kpdtheta").as_double();
+	Kddtheta = this->get_parameter("Kddtheta").as_double();
+	Kidtheta = this->get_parameter("Kidtheta").as_double();
 	
 
 
