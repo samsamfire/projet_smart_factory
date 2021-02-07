@@ -65,7 +65,7 @@ void AgvROSWrapper::publishCurrentSpeed(){
 	geometry_msgs::msg::Twist msg;
 	//First call read vel
 	if(agv->getVelEncoder(speed_encoder)==false){
-		RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Error retreiving speed from AGV");
+		RCLCPP_INFO_ONCE(rclcpp::get_logger("rclcpp"), "Error retreiving speed from AGV");
 	}
 
 

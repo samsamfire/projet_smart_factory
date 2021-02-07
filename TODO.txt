@@ -1,0 +1,10 @@
+-Ajouter une description sous forme de schéma bloc du controleur
+-Add one node per sensor or combine all of them in one node ?
+-Add functionality to MCU driver for led status (error state, can error state, drivers on, drivers off etc)
+-Create a package that contains all the launch files for easy use
+-Create a package for gazebo and/or gazebo simulation
+-Start creation of navigation stack
+-Implement a virtual emergency stop with infrared sensors for testing 
+-Maybe test/write other controllers with Matlab ROS plugin ?
+-Adding marvel mind sensors for position tracking when possible, ...
+-Maybe a service for uploading custom code to MCUs via CAN bootloader?
