@@ -29,6 +29,7 @@ find_package(geometry_msgs REQUIRED)
 
 add_executable(agv-wrapper src/AGVRos2Wrapper.cpp driver/src/AGV_Driver.cpp driver/src/Motor_Driver_DSPIC33.cpp)
 ament_target_dependencies(agv-wrapper rclcpp std_msgs geometry_msgs std_srvs)
+target_link_libraries(agv-wrapper socketcan)
 
 
 
