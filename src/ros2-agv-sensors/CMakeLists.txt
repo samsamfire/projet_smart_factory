@@ -19,6 +19,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 #find_package(PkgConfig REQUIRED)
 
@@ -32,8 +33,11 @@ find_package(std_srvs REQUIRED)
 
 add_executable(agv-sensors src/agv_sensors.cpp src/MPU6050.cpp src/MPU6050ROSWrapper.cpp)
 ament_target_dependencies(agv-sensors rclcpp sensor_msgs std_srvs)
-
 target_link_libraries(agv-sensors i2c pthread)
+
+add_executable(agv-marvelmind src/marvelmind_node.cpp src/marvelmind.c src/marvelmindROSWrapper.cpp)
+ament_target_dependencies(agv-marvelmind rclcpp geometry_msgs std_srvs)
+target_link_libraries(agv-marvelmind pthread)
 
 
 
@@ -41,7 +45,11 @@ target_include_directories(agv-sensors PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-install(TARGETS agv-sensors
+target_include_directories(agv-marvelmind PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>)
+
+install(TARGETS agv-sensors agv-marvelmind
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY
