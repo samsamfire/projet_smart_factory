@@ -13,7 +13,7 @@ class AgvROSWrapper
 {
 	public:
 		AgvROSWrapper(std::shared_ptr<rclcpp::Node> nh,int ad_fl,int ad_fr,int ad_br, int ad_bl);
-		
+
 
 		bool setVel(geometry_msgs::msg::Twist *twistptr);
 		geometry_msgs::msg::Twist * getVel();
@@ -24,7 +24,7 @@ class AgvROSWrapper
 
 	private:
     //Use ROS message for sending velocity commands
-    geometry_msgs::msg::Twist *twist; 
+    geometry_msgs::msg::Twist *twist;
     //Driver instance, using smart pointer type
     std::unique_ptr<AGV> agv;
 
@@ -42,6 +42,7 @@ class AgvROSWrapper
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr speed_command_subscriber;
 
     // rclcpp::Subscriber speed_command_subscriber;
+		
 
 
     rclcpp::TimerBase::SharedPtr current_speed_timer;
@@ -76,7 +77,7 @@ class AgvROSWrapper
 
 
 
-	
+
 };
 
 #endif

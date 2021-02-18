@@ -6,7 +6,7 @@ marvelmindWrapper::marvelmindWrapper(std::shared_ptr<rclcpp::Node> nh) {
 
 
 	this->nh = nh;
-	pos_publisher = nh->create_publisher<geometry_msgs::msg::Point>("pos_readings",10);
+	pos_publisher = nh->create_publisher<geometry_msgs::msg::Pose>("marvelmind_readings",10);
 
 	std::chrono::milliseconds sensor_update_ms(static_cast<int>(1000.0/200)); //200Hz
 
@@ -20,21 +20,32 @@ marvelmindWrapper::marvelmindWrapper(std::shared_ptr<rclcpp::Node> nh) {
 /*Callback method that publishes Marvelmind data when valid data is retreived from Hedgehog*/
 void marvelmindWrapper::publishMarvelmindReadings(){
 
-	geometry_msgs::msg::Point msg;
+	geometry_msgs::msg::Pose msg;
 
-	struct PositionValue pos;
+	//struct PositionValue pos;
+	struct FusionIMUValue data; //All data that hedge can get
 
-	if (getPositionFromMarvelmindHedge(this->hedge,&pos)){ //position is valid
+	getFusionIMUFromMarvelmindHedge(this->hedge,&data);
+
+	//if (getPositionFromMarvelmindHedge(this->hedge,&pos)){ //position is valid
+	if (data.updated){
 		RCLCPP_INFO_ONCE(nh->get_logger(),"Started publishing Marvelmind readings");
 
-		msg.x = (float) pos.x;
-		msg.y = (float) pos.y;
-		msg.z = (float) pos.z;
+		// coordinates in mm
+		msg.position.x = (float) data.x;
+		msg.position.y = (float) data.y;
+		msg.position.z = (float) data.z;
 
 		//Convert to meters
-		msg.x /= 1000;
-		msg.y /= 1000;
-		msg.z /= 1000;
+		msg.position.x /= 1000;
+		msg.position.y /= 1000;
+		msg.position.z /= 1000;
+
+		// quaternion, normalized to 10000
+		msg.orientation.x = data.qx;
+		msg.orientation.y = data.qy;
+		msg.orientation.z = data.qz;
+		msg.orientation.w = data.qw;
 
 		pos_publisher->publish(msg);
 	}
@@ -49,7 +60,7 @@ bool marvelmindWrapper::connect()
 	//Creation test
   if (this->hedge==NULL)
   {
-      RCLCPP_INFO(nh->get_logger(),"Error: Unable to create MarvelmindHedge");
+      RCLCPP_ERROR(nh->get_logger(),"Unable to create MarvelmindHedge");
 			return false;
       // res->success = false;
   }

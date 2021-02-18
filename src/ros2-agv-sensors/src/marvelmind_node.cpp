@@ -15,7 +15,7 @@ int main(int argc, char ** argv)
   if (marvelmindWrapper.connect()){
     rclcpp::spin(node);
   }
-  //else RCLCPP_INFO(node->get_logger(),"Connection to Marvelmind failed");
+  else RCLCPP_ERROR(node->get_logger(),"Connection to Marvelmind failed");
 
   marvelmindWrapper.disconnect();
 

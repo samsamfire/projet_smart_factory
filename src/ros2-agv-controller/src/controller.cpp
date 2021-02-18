@@ -10,10 +10,16 @@ PosController::PosController() : Node("agv_controller")
 
 	getParams();
 
-	user_command_subscriber = this->create_subscription<geometry_msgs::msg::Pose>("user_speed_cmd",10, std::bind(&PosController::callbackUserPositionCmd,this,_1));
+	user_position_command_subscriber = this->create_subscription<geometry_msgs::msg::Pose>("user_pos_cmd",10, std::bind(&PosController::callbackUserPositionCmd,this,_1));
+	user_speed_command_subscriber = this->create_subscription<geometry_msgs::msg::Twist>("user_vel_cmd",10, std::bind(&PosController::callbackUserSpeedCmd,this,_1));
+
 	current_speed_subscriber = this->create_subscription<geometry_msgs::msg::Twist>("current_speed",10, std::bind(&PosController::updateCurrentSpeed,this,_1));
-	speed_command_publisher = this->create_publisher<geometry_msgs::msg::Twist>("vel_cmd",10);
+	speed_command_publisher = this->create_publisher<geometry_msgs::msg::Twist>("agv_vel_cmd",10);
 	imu_readings_subscriber = this->create_subscription<sensor_msgs::msg::Imu>("imu_readings",10, std::bind(&PosController::getImuReadings,this,_1));
+	marvelmind_readings_subscriber = this->create_subscription<geometry_msgs::msg::Pose>("marvelmind_readings",10, std::bind(&PosController::getMarvelmindReadings,this,_1));
+
+	//Vision topics
+	marker_id_suscriber = this->create_subscription<std_msgs::msg::UInt8>("marker_id",10, std::bind(&PosController::callbackMarker,this,_1));
 
 
 	std::chrono::milliseconds pid_update_ms(static_cast<int>(1000.0 / (pid_update_rate)));
@@ -21,7 +27,7 @@ PosController::PosController() : Node("agv_controller")
 	pid_timer = this->create_wall_timer(std::chrono::duration_cast<std::chrono::milliseconds>(pid_update_ms),std::bind(&PosController::updatePid,this));
 
 
-	
+
 
 	dt = 1.0/pid_update_rate;
 
@@ -33,7 +39,7 @@ PosController::PosController() : Node("agv_controller")
 
 
 
-	if(this->count_subscribers("vel_cmd") == 1){
+	if(this->count_subscribers("cmd_vel") == 1){
 
 		RCLCPP_INFO(this->get_logger(),"AGV is online");
 	}
@@ -80,15 +86,21 @@ bool PosController::callbackUserPositionCmd(const geometry_msgs::msg::Pose::Shar
 	pos_cmd[2] = 0;
 	pos_cmd[3] = 0;
 
+}
 
+bool PosController::callbackUserSpeedCmd(const geometry_msgs::msg::Twist::SharedPtr msg){
+
+	//TODO
 
 }
+
+void PosController::callbackMarker (const std_msgs::msg::UInt8::SharedPtr msg){}
 
 void PosController::updateCurrentSpeed(const geometry_msgs::msg::Twist::SharedPtr msg){
 
 	auto& clk = *this->get_clock();
 
-	
+
 
 	speed_encoder[0] = msg->linear.x;
 	speed_encoder[1] = msg->linear.y;
@@ -108,6 +120,13 @@ void PosController::getImuReadings(const sensor_msgs::msg::Imu::SharedPtr msg){
 
 
 }
+
+void PosController::getMarvelmindReadings(const geometry_msgs::msg::Pose::SharedPtr msg){
+
+	//TODO
+
+}
+
 
 
 double limit(double to_limit, double limit_max, double limit_min){
@@ -131,9 +150,9 @@ void PosController::updatePid(){
 	geometry_msgs::msg::Twist msg;
 
 	double pos_ctrl[4];
-		
+
 	double vxr = speed_encoder[0];
-	double vyr = speed_encoder[1];	
+	double vyr = speed_encoder[1];
 
 
 
@@ -157,7 +176,7 @@ void PosController::updatePid(){
 	itermx += (double) Kix*errorx*dt;
 	itermy += (double) Kiy*errory*dt;
 	itermdtheta += (double) Kidtheta*errordtheta*dtheta;
-	
+
 
 	itermx = limit(itermx,0.25,-0.25);
 	itermy = limit(itermy,0.25,-0.25);
@@ -173,7 +192,7 @@ void PosController::updatePid(){
 	pos_ctrl[3] = 0;
 
 
-	
+
 
 	if(abs(errorx)< 0.015){
 		pos_ctrl[0] = 0;
@@ -196,7 +215,7 @@ void PosController::updatePid(){
 	msg.angular.z = pos_ctrl[2];
 
 	speed_command_publisher->publish(msg);
-	
+
 
 
 	prev_errorx = errorx;
@@ -221,7 +240,7 @@ void PosController::getParams(){
 	this->declare_parameter("Kpx",2.0);
 	this->declare_parameter("Kdx",0.1);
 	this->declare_parameter("Kix",0.01);
-	
+
 	//Pid y parameters
 
 	this->declare_parameter("Kpy",2.0);
@@ -233,7 +252,7 @@ void PosController::getParams(){
 	this->declare_parameter("Kpdtheta",2.0);
 	this->declare_parameter("Kddtheta",0.001);
 	this->declare_parameter("Kidtheta",0.01);
-	
+
 
 	//Getting parameters
 
@@ -252,7 +271,7 @@ void PosController::getParams(){
 	Kpdtheta = this->get_parameter("Kpdtheta").as_double();
 	Kddtheta = this->get_parameter("Kddtheta").as_double();
 	Kidtheta = this->get_parameter("Kidtheta").as_double();
-	
+
 
 
 }

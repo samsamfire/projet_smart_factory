@@ -1,7 +1,8 @@
 import rclpy
 from rclpy.node import Node
 
-from std_msgs.msg import UInt8, UInt16, Float32
+from std_msgs.msg import UInt8, Int16
+from geometry_msgs.msg import Point
 
 import numpy as np
 import cv2 as cv
@@ -11,10 +12,11 @@ class Vision(Node):
 	def __init__(self):
 		super().__init__('vision')
 
-		self.id_publisher_ = self.create_publisher(UInt8, 'id', 10)
-		self.orientation_publisher_ = self.create_publisher(UInt16, 'orientation', 10)
-		self.x_cord_publisher_ = self.create_publisher(Float32, 'x_cord', 10)
-		self.y_cord_publisher_ = self.create_publisher(Float32, 'y_cord', 10)
+		self.id_publisher_ = self.create_publisher(UInt8, 'marker_id', 10)
+		self.orientation_publisher_ = self.create_publisher(Int16, 'marker_orientation', 10)
+		self.coord_publisher_= self.create_publisher(Point, 'marker_position', 10)
+		# self.x_cord_publisher_ = self.create_publisher(Float32, 'x_cord', 10)
+		# self.y_cord_publisher_ = self.create_publisher(Float32, 'y_cord', 10)
 
 		timer_period = 0.1  # seconds
 		self.timer = self.create_timer(timer_period, self.timer_callback)
@@ -24,6 +26,10 @@ class Vision(Node):
 		camera_id = self.get_parameter("camera_id").value
 
 		self.camera = cv.VideoCapture(camera_id)
+		if self.camera is None or not self.camera.isOpened():
+			self.connected=False
+		else:
+			self.connected=True
 
 	def timer_callback(self):
 		ret, frame = self.camera.read()
@@ -36,22 +42,27 @@ class Vision(Node):
 			id_msg.data = int(marker_id)
 			self.id_publisher_.publish(id_msg)
 
-			orientation_msg = UInt16()
+			orientation_msg = Int16()
 			orientation_msg.data = int(orientation_angle)
 			self.orientation_publisher_.publish(orientation_msg)
 
-			x_cord_msg = Float32()
-			x_cord_msg.data = float(center[0])
-			self.x_cord_publisher_.publish(x_cord_msg)
+			coord_msg=Point()
+			coord_msg.x = float(center[0])
+			coord_msg.y = float(center[1])
+			self.coord_publisher_.publish(coord_msg)
 
-			y_cord_msg = Float32()
-			y_cord_msg.data = float(center[1])
-			self.y_cord_publisher_.publish(y_cord_msg)
+			# x_cord_msg = Float32()
+			# x_cord_msg.data = float(center[0])
+			# self.x_cord_publisher_.publish(x_cord_msg)
+			#
+			# y_cord_msg = Float32()
+			# y_cord_msg.data = float(center[1])
+			# self.y_cord_publisher_.publish(y_cord_msg)
 
-			self.get_logger().info('Publishing: id: '+str(id_msg.data)+
-				'	orientation: '+str(orientation_msg.data)+
-				'	X position: '+str(x_cord_msg.data)+
-				'	Y position: '+str(y_cord_msg.data))
+			# self.get_logger().info('Publishing: id: '+str(id_msg.data)+
+			# 	'	orientation: '+str(orientation_msg.data)+
+			# 	'	X position: '+str(coord_msg.x)+
+			# 	'	Y position: '+str(coord_msg.y))
 		self.i += 1
 
 def process_img(src):
@@ -65,14 +76,14 @@ def process_img(src):
 	#Applying Hough Transform to find circles
 	gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
 	gray = cv.medianBlur(gray, 5)
-	
-	
+
+
 	rows = gray.shape[0]
 	circles = cv.HoughCircles(gray, cv.HOUGH_GRADIENT, 1, 30,
 							   param1=100, param2=40,
 							   minRadius=20, maxRadius=50)
-	
-	
+
+
 	if circles is not None:
 		circles = np.uint16(np.around(circles))
 		max_radius = 0
@@ -138,17 +149,22 @@ def process_img(src):
 		return(src,-1,0,(0,0))
 
 def main(args=None):
+
+	rclpy.logging._root_logger.info('Beginning of marker detection')
+	#print(rclpy.__init__(args=args))
+
 	rclpy.init(args=args)
-	print('Beginning of marker detection')
-
-	cv.namedWindow("Camera Window")
-
 	vision = Vision()
-	rclpy.spin(vision)
+	if vision.connected:
+		cv.namedWindow("Camera Window")
+		rclpy.spin(vision)
+		vision.camera.release()
+		cv.destroyAllWindows()
+	else:
+		rclpy.logging._root_logger.error('Connection to camera failed')
 
-	camera.release()
-	cv.destroyAllWindows()	
-
+	rclpy.logging._root_logger.info('Shutting down marker detection')
+	rclpy.shutdown()
 
 if __name__ == '__main__':
 	main()

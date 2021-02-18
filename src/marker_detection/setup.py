@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'vision = marker_detection.vision:main',
+            'agv-vision = marker_detection.vision:main',
             'listener = marker_detection.subscriber_member_function:main'
         ],
     },

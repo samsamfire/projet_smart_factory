@@ -7,7 +7,7 @@ extern "C" {
 }
 
 #include "rclcpp/rclcpp.hpp"
-#include "geometry_msgs/msg/point.hpp"
+#include "geometry_msgs/msg/pose.hpp"
 #include "std_srvs/srv/trigger.hpp"
 
 
@@ -36,7 +36,7 @@ private:
 
 	std::shared_ptr<rclcpp::Node> nh;
 
-	rclcpp::Publisher<geometry_msgs::msg::Point>::SharedPtr pos_publisher;
+	rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr pos_publisher;
 	// rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr connect_service;
 	// rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr disconnect_service;
 

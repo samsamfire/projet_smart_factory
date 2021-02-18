@@ -13,6 +13,10 @@
   <test_depend>ament_lint_common</test_depend>
 
   <exec_depend>ros2-agv-wrapper</exec_depend>
+  <exec_depend>ros2-agv-controller</exec_depend>
+  <exec_depend>ros2-agv-sensors</exec_depend>
+  <exec_depend>marker_detection</exec_depend>
+  <exec_depend>teleop_twist_keyboard</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

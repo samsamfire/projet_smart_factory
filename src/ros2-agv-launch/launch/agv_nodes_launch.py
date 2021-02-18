@@ -50,8 +50,18 @@ def generate_launch_description():
     vision_node=Node(
         package='marker_detection',
         #namespace='agv1',
-        executable='vision',
+        executable='agv-vision',
         name='vision'
+    )
+
+    teleop_node=Node(
+        package='teleop_twist_keyboard',
+        #namespace='agv1',
+        executable='teleop_twist_keyboard',
+        name='teleop_twist_keyboard',
+        output='screen',
+        prefix = 'xterm -e', #launch in a new terminal
+        remappings=[('/cmd_vel','/user_vel_cmd')]
     )
 
     ld.add_action(sensors_node)
@@ -59,5 +69,6 @@ def generate_launch_description():
     ld.add_action(wrapper_node)
     ld.add_action(controller_node)
     ld.add_action(vision_node)
+    ld.add_action(teleop_node)
 
     return ld

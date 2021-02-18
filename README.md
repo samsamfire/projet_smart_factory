@@ -13,12 +13,8 @@ This repository contains several ros2 packages for working with AGVs:
 
 
 # Overall functional overview
-![Alt text](Documents/Overview.png?raw=true "ROS functional overview")
+![Alt text](Documents/rosgraph.png?raw=true "ROS functional overview")
 
 
 # AGV Wrapper
 ![Alt text](Documents/AGV.png?raw=true "AGV description")
-
-
-
-

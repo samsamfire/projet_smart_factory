@@ -37,7 +37,7 @@ AgvROSWrapper::AgvROSWrapper(std::shared_ptr<rclcpp::Node> nh,int ad_fl,int ad_f
  	std::chrono::milliseconds speed_update_ms(static_cast<int>(1000.0 / (current_speed_hz)));
  	current_speed_timer = nh->create_wall_timer(std::chrono::duration_cast<std::chrono::milliseconds>(speed_update_ms),std::bind(&AgvROSWrapper::publishCurrentSpeed,this));
 
- 	speed_command_subscriber = nh->create_subscription<geometry_msgs::msg::Twist>("vel_cmd", 10, std::bind(&AgvROSWrapper::callbackSpeedCommand,this,_1));
+ 	speed_command_subscriber = nh->create_subscription<geometry_msgs::msg::Twist>("agv_vel_cmd", 10, std::bind(&AgvROSWrapper::callbackSpeedCommand,this,_1));
 
 
 }
@@ -88,7 +88,7 @@ void AgvROSWrapper::publishCurrentSpeed(){
 
 void AgvROSWrapper::callbackSpeedCommand(const geometry_msgs::msg::Twist::SharedPtr msg){
 
-	
+
 
 	speed_cmd[0] = (double) msg->linear.x;
 	speed_cmd[1] = (double) msg->linear.y;
@@ -100,7 +100,7 @@ void AgvROSWrapper::callbackSpeedCommand(const geometry_msgs::msg::Twist::Shared
 
 	agv->writeVel(speed_cmd);
 
-	
+
 
 	/*TODO -add verification that the request is captured*/
 
@@ -126,7 +126,7 @@ bool AgvROSWrapper::callbackStop(const std::shared_ptr<rmw_request_id_t> request
 		res->message="Stopped " + std::to_string(result) + " motor(s)";
 		return true;
 	}
-	
+
 }
 
 
@@ -157,7 +157,7 @@ bool AgvROSWrapper::callbackStart(const std::shared_ptr<rmw_request_id_t> reques
 bool AgvROSWrapper::callbackOpenBus(const std::shared_ptr<rmw_request_id_t> request_header,
                                        const std::shared_ptr<std_srvs::srv::Trigger_Request> req,
                                        std::shared_ptr<std_srvs::srv::Trigger_Response> res){
-	/*TODO add optional bitarate via usage of std_msgs*/ 
+	/*TODO add optional bitarate via usage of std_msgs*/
 
 	agv->openBus(500000);
 	int bitrate = 500000;
@@ -176,7 +176,7 @@ bool AgvROSWrapper::callbackCloseBus(const std::shared_ptr<rmw_request_id_t> req
 	res->success = true;
 	res->message = "Closed CAN bus";
 
-	return true; 
+	return true;
 
 }
 
@@ -192,7 +192,7 @@ int main(int argc, char ** argv)
 	rclcpp::init(argc, argv);
 	std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("agv_wrapper");
 
-    
+
 	RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"AGV Node is running");
 
 	AgvROSWrapper agv_wrapper(node,4,5,6,7);
@@ -200,8 +200,8 @@ int main(int argc, char ** argv)
 	//agv_wrapper.stop();
 
     rclcpp::spin(node);
-	
+
     agv_wrapper.stop();
 	rclcpp::shutdown();
-    
+
 }
