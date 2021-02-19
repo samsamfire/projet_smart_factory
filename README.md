@@ -43,7 +43,7 @@ colcon build
 Source workspace (for every new terminal) :
 `source install/setup.bash`
 
-	- Run a node (for example ros2-agv-wrapper)
-	`ros2 run ros2-agv-wrapper agv-wrapper`
-	- Run a launch file (that will launch several nodes)
-	`ros2 launch ros2-agv-launch agv_nodes_launch.py`
+#### Run a node (for example ros2-agv-wrapper)
+`ros2 run ros2-agv-wrapper agv-wrapper`
+#### Run a launch file (that will launch several nodes)
+`ros2 launch ros2-agv-launch agv_nodes_launch.py`
