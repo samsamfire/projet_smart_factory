@@ -1,8 +1,11 @@
 # Projet Smart Factory de centrale lille
 
 
-
 ## Introduction
+This ROS project uses 2 other repos:
+https://github.com/samsamfire/LinuxAgvDriver
+https://github.com/samsamfire/AGVMotorDriver for microcontroller developpement
+
 ### Packages
 This repository contains several ros2 packages for working with AGVs:
 
@@ -37,7 +40,7 @@ colcon build
 
 
 ## Launch
-Source workspace (for exery new terminal) :
+Source workspace (for every new terminal) :
 `source install/setup.bash`
 
 	- Run a node (for example ros2-agv-wrapper)
