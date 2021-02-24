@@ -48,6 +48,9 @@ source install/setup.bash
 colcon build
 ```
 
+Note: For raspberry pi do not compile all packages (otherwise very long), select only the packages that need to be running on agv : sensors and wrapper. For example:
+`colcon build --packages-select=ros2-agv-wrapper`
+
 ## Launch
 Source workspace (for every new terminal) :
 `source install/setup.bash`
