@@ -32,16 +32,27 @@ https://index.ros.org/doc/ros2/Installation/Foxy/
 Clone workspace :
 `git clone https://github.com/samsamfire/projet_smart_factory.git`
 
+Install project dependencies using rosdep
+```
+cd projet_smart_factory
+sudo rosdep init
+rosdep update
+rosdep install --from-paths src --ignore-src
+```
+
 Build workspace :
 ```
 source install/setup.bash
 colcon build
 ```
 
-
 ## Launch
 Source workspace (for every new terminal) :
 `source install/setup.bash`
+
+Set the same ROS_DOMAIN_ID on every machine you want to use
+`export ROS_DOMAIN_ID=5`.
+Or `echo "export ROS_DOMAIN_ID=5" >> ~/.bashrc` to do it only once
 
 #### Run a node (for example ros2-agv-wrapper)
 `ros2 run ros2-agv-wrapper agv-wrapper`
