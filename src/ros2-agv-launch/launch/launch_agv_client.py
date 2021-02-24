@@ -35,10 +35,24 @@ def generate_launch_description():
         name='wrapper'
     )
 
+    config = os.path.join(
+    get_package_share_directory('ros2-agv-controller'),
+    'config',
+    'params.yaml')
+
+    controller_node=Node(
+        package='ros2-agv-controller',
+        #namespace='agv1',
+        executable='agv-controller',
+        name='controller',
+        parameters = [config]
+    )
+
 
 
     ld.add_action(sensors_node)
-    ld.add_action(marvelmind_node)
+    #ld.add_action(marvelmind_node)
     ld.add_action(wrapper_node)
+    ld.add_action(controller_node)
 
     return ld
