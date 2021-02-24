@@ -26,6 +26,8 @@ This repository contains several ros2 packages for working with AGVs:
 ## Installation
 Tested on Ubuntu 5.4.0-65-generic
 
+Both raspberry pi and pc need ROS2 with foxy distribution installed
+
 Install ROS Foxy :
 https://index.ros.org/doc/ros2/Installation/Foxy/
 
