@@ -26,7 +26,7 @@ This repository contains several ros2 packages for working with AGVs:
 ## Installation
 Tested on Ubuntu 5.4.0-65-generic
 
-Both raspberry pi and pc need ROS2 with foxy distribution installed 
+Both raspberry pi and pc need ROS2 with foxy distribution installed
 
 Install ROS Foxy :
 https://index.ros.org/doc/ros2/Installation/Foxy/
@@ -34,19 +34,30 @@ https://index.ros.org/doc/ros2/Installation/Foxy/
 Clone workspace :
 `git clone https://github.com/samsamfire/projet_smart_factory.git`
 
+Install project dependencies using rosdep
+```
+cd projet_smart_factory
+sudo rosdep init
+rosdep update
+rosdep install --from-paths src --ignore-src
+```
+
 Build workspace :
 ```
 source install/setup.bash
 colcon build
 ```
 
-Note:
-	For raspberry pi do not compile all packages (otherwise very long), select only the packages that need to be running on agv : sensors and wrapper
-
+Note: For raspberry pi do not compile all packages (otherwise very long), select only the packages that need to be running on agv : sensors and wrapper. For example:
+`colcon build --packages-select=ros2-agv-wrapper`
 
 ## Launch
 Source workspace (for every new terminal) :
 `source install/setup.bash`
+
+Set the same ROS_DOMAIN_ID on every machine you want to use
+`export ROS_DOMAIN_ID=5`.
+Or `echo "export ROS_DOMAIN_ID=5" >> ~/.bashrc` to do it only once
 
 #### Run a node (for example ros2-agv-wrapper)
 `ros2 run ros2-agv-wrapper agv-wrapper`
