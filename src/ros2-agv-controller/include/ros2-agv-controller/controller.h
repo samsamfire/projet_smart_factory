@@ -19,6 +19,8 @@ public:
 	PosController();
 
 	void getParams();
+	void getPosition();
+	void positionFusion();
 
 
 
@@ -70,6 +72,9 @@ private:
 
 	double px = 0,py = 0;
 	double pxw = 0,pyw = 0,theta = 0;
+	double p_marvelmindx =0,p_marvelmindy =0;
+	double is_calibrated;
+	double offset_x=0,offset_y=0;
 	double dtheta = 0;
 
 	double errorx = 0,errory = 0, errordtheta = 0;
@@ -86,6 +91,9 @@ private:
 	double Kpdtheta,Kddtheta,Kidtheta;
 	double anti_windup;
 	double pid_update_rate;
+
+	//Sensor fusion
+	double alpha = 0.3;
 };
 
 

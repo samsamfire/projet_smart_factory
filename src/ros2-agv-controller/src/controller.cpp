@@ -41,7 +41,7 @@ PosController::PosController() : Node("agv_controller")
 
 
 
-	if(this->count_subscribers("cmd_vel") == 1){
+	if(this->count_subscribers("agv_vel_cmd") == 1){
 
 		RCLCPP_INFO(this->get_logger(),"AGV is online");
 	}
@@ -68,6 +68,19 @@ PosController::PosController() : Node("agv_controller")
 		RCLCPP_INFO(this->get_logger(),"Sensor node must be running for the controller to work properly");
 	}
 
+	RCLCPP_INFO(this->get_logger(),"Checking if Marvelmind is running ...");
+
+	//For initial position
+	this->is_calibrated = false;
+
+	if(this->count_subscribers("marvelmind_readings") == 1){
+
+		RCLCPP_INFO(this->get_logger(),"Marvelmind is online");
+	}
+	else{
+
+		RCLCPP_INFO(this->get_logger(),"No marlvelmind publishing");
+	}
 
 
 
@@ -127,8 +140,16 @@ void PosController::getImuReadings(const sensor_msgs::msg::Imu::SharedPtr msg){
 
 void PosController::getMarvelmindReadings(const geometry_msgs::msg::Pose::SharedPtr msg){
 
-	//TODO
-
+	if(this->is_calibrated == true){
+		this->p_marvelmindx = msg->position.x - offset_x;
+		this->p_marvelmindy = msg->position.y - offset_y;
+	}
+	else{
+		this->is_calibrated = true;
+		offset_x = msg->position.x;
+		offset_y = msg->position.y;
+	}
+	positionFusion();
 }
 
 
@@ -158,6 +179,9 @@ void PosController::updatePid(){
 	double vxr = speed_encoder[0];
 	double vyr = speed_encoder[1];
 
+	// Testing marvelmind
+	pos_cmd[0] = p_marvelmindx;
+	pos_cmd[1] = p_marvelmindy;
 
 
 	//Positions in world frame :
@@ -278,6 +302,17 @@ void PosController::getParams(){
 
 
 
+}
+
+void PosController::positionFusion(){
+	//Processes position information and conbines them together for more accurate position control
+	//This method is called everytime marvelmind data is updated
+	auto& clk = *this->get_clock();
+
+	pxw = (alpha*p_marvelmindx)+(1-alpha)*pxw;
+	pyw = (alpha*p_marvelmindy)+(1-alpha)*pyw;
+
+	RCLCPP_INFO_THROTTLE(this->get_logger(), clk,1000, "Current position after fusion : x = %lf, y = %lf",pxw,pyw);
 }
 
 
