@@ -5,8 +5,10 @@
 #include <string>
 #include "geometry_msgs/msg/twist.hpp"
 #include "geometry_msgs/msg/pose.hpp"
+#include "geometry_msgs/msg/point.hpp"
 #include "sensor_msgs/msg/imu.hpp"
 #include "std_msgs/msg/u_int8.hpp"
+#include "std_msgs/msg/int16.hpp"
 
 using namespace std::placeholders;
 
@@ -33,6 +35,8 @@ private:
 
 	//Vision topics
 	rclcpp::Subscription<std_msgs::msg::UInt8>::SharedPtr marker_id_suscriber;
+	rclcpp::Subscription<std_msgs::msg::Int16>::SharedPtr marker_orientation_suscriber;
+	rclcpp::Subscription<geometry_msgs::msg::Point>::SharedPtr marker_position_suscriber;
 
 	rclcpp::TimerBase::SharedPtr pid_timer;
 
@@ -46,8 +50,9 @@ private:
 	void getImuReadings(const sensor_msgs::msg::Imu::SharedPtr msg);
 	void getMarvelmindReadings(const geometry_msgs::msg::Pose::SharedPtr msg);
 
-	void callbackMarker(const std_msgs::msg::UInt8::SharedPtr msg);
-
+	void callbackMarkerId (const std_msgs::msg::UInt8::SharedPtr msg);
+	void callbackMarkerOrientation (const std_msgs::msg::Int16::SharedPtr msg);
+	void callbackMarkerPosition (const geometry_msgs::msg::Point::SharedPtr msg);
 
 
 	rclcpp::Parameter pid_hz;
