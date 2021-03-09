@@ -19,7 +19,9 @@ PosController::PosController() : Node("agv_controller")
 	marvelmind_readings_subscriber = this->create_subscription<geometry_msgs::msg::Pose>("marvelmind_readings",10, std::bind(&PosController::getMarvelmindReadings,this,_1));
 
 	//Vision topics
-	marker_id_suscriber = this->create_subscription<std_msgs::msg::UInt8>("marker_id",10, std::bind(&PosController::callbackMarker,this,_1));
+	marker_id_suscriber = this->create_subscription<std_msgs::msg::UInt8>("marker_id",10, std::bind(&PosController::callbackMarkerId,this,_1));
+	marker_orientation_suscriber = this->create_subscription<std_msgs::msg::Int16>("marker_orientation",10, std::bind(&PosController::callbackMarkerOrientation,this,_1));
+	marker_position_suscriber = this->create_subscription<geometry_msgs::msg::Point>("marker_position",10, std::bind(&PosController::callbackMarkerPosition,this,_1));
 
 
 	std::chrono::milliseconds pid_update_ms(static_cast<int>(1000.0 / (pid_update_rate)));
@@ -120,7 +122,9 @@ bool PosController::callbackUserSpeedCmd(const geometry_msgs::msg::Twist::Shared
 
 }
 
-void PosController::callbackMarker (const std_msgs::msg::UInt8::SharedPtr msg){}
+void PosController::callbackMarkerId (const std_msgs::msg::UInt8::SharedPtr msg){}
+void PosController::callbackMarkerOrientation (const std_msgs::msg::Int16::SharedPtr msg){}
+void PosController::callbackMarkerPosition (const geometry_msgs::msg::Point::SharedPtr msg){}
 
 void PosController::updateCurrentSpeed(const geometry_msgs::msg::Twist::SharedPtr msg){
 

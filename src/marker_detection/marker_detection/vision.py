@@ -22,7 +22,7 @@ class Vision(Node):
 		self.timer = self.create_timer(timer_period, self.timer_callback)
 		self.i = 0
 
-		self.declare_parameter("camera_id",2)
+		self.declare_parameter("camera_id",0)
 		camera_id = self.get_parameter("camera_id").value
 
 		self.camera = cv.VideoCapture(camera_id)
