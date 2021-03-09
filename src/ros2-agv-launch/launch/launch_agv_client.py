@@ -51,7 +51,7 @@ def generate_launch_description():
 
 
     ld.add_action(sensors_node)
-    #ld.add_action(marvelmind_node)
+    ld.add_action(marvelmind_node)
     ld.add_action(wrapper_node)
     ld.add_action(controller_node)
 

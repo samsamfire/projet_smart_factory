@@ -12,7 +12,7 @@ PosController::PosController() : Node("agv_controller")
 
 	user_position_command_subscriber = this->create_subscription<geometry_msgs::msg::Pose>("user_pos_cmd",10, std::bind(&PosController::callbackUserPositionCmd,this,_1));
 	user_speed_command_subscriber = this->create_subscription<geometry_msgs::msg::Twist>("user_vel_cmd",10, std::bind(&PosController::callbackUserSpeedCmd,this,_1));
-
+	
 	current_speed_subscriber = this->create_subscription<geometry_msgs::msg::Twist>("current_speed",10, std::bind(&PosController::updateCurrentSpeed,this,_1));
 	speed_command_publisher = this->create_publisher<geometry_msgs::msg::Twist>("agv_vel_cmd",10);
 	imu_readings_subscriber = this->create_subscription<sensor_msgs::msg::Imu>("imu_readings",10, std::bind(&PosController::getImuReadings,this,_1));
@@ -27,7 +27,7 @@ PosController::PosController() : Node("agv_controller")
 	pid_timer = this->create_wall_timer(std::chrono::duration_cast<std::chrono::milliseconds>(pid_update_ms),std::bind(&PosController::updatePid,this));
 
 
-
+	is_posing = false;
 
 	dt = 1.0/pid_update_rate;
 
@@ -89,13 +89,24 @@ PosController::PosController() : Node("agv_controller")
 
 
 bool PosController::callbackUserPositionCmd(const geometry_msgs::msg::Pose::SharedPtr msg){
+	//Check if AGV has finished previous position command
 
-	pos_cmd[0] = msg->position.x;
-	pos_cmd[1] = msg->position.y;
+	if(isPosingFinished()){
+		//Update new position command
+		pos_cmd[0] = msg->position.x;
+		pos_cmd[1] = msg->position.y;
+		RCLCPP_INFO(this->get_logger(),"New position command : X: %lf, Y: %lf");
+		is_posing = true;
+	}
+
+	else{
+		RCLCPP_INFO(this->get_logger(),"AGV hasn't reached destination yet");
+	}
+
 
 
 	//TODO compute theta from quaternion
-	RCLCPP_INFO(this->get_logger(),"New position command");
+	
 	pos_cmd[2] = 0;
 	pos_cmd[3] = 0;
 
@@ -103,7 +114,9 @@ bool PosController::callbackUserPositionCmd(const geometry_msgs::msg::Pose::Shar
 
 bool PosController::callbackUserSpeedCmd(const geometry_msgs::msg::Twist::SharedPtr msg){
 
-	//TODO
+	// msg->linear.x;
+	// msg->linear.y;
+	// msg->angular.z;
 
 }
 
@@ -120,7 +133,7 @@ void PosController::updateCurrentSpeed(const geometry_msgs::msg::Twist::SharedPt
 	speed_encoder[2] = 0;
 	speed_encoder[3] = 0;
 
-	RCLCPP_INFO_THROTTLE(this->get_logger(), clk,5000, "Received new current speed : Vx : %lf, Vy: %lf",speed_encoder[0],speed_encoder[1]);
+	RCLCPP_INFO_THROTTLE(this->get_logger(), clk,5000, "Received new current speed : VX : %lf, VY: %lf",speed_encoder[0],speed_encoder[1]);
 }
 
 void PosController::getImuReadings(const sensor_msgs::msg::Imu::SharedPtr msg){
@@ -175,10 +188,6 @@ void PosController::updatePid(){
 	double vxr = speed_encoder[0];
 	double vyr = speed_encoder[1];
 
-	// Testing marvelmind
-	pos_cmd[0] = p_marvelmindx;
-	pos_cmd[1] = p_marvelmindy;
-
 
 	//Positions in world frame :
 	pxw += vxr*dt;
@@ -218,17 +227,17 @@ void PosController::updatePid(){
 
 
 
-	if(abs(errorx)< 0.015){
+	if(abs(errorx)< 0.02){
 		pos_ctrl[0] = 0;
 		itermx = 0;
 	}
 
-	if(abs(errory)< 0.015){
+	if(abs(errory)< 0.02){
 		pos_ctrl[1] = 0;
 		itermy = 0;
 	}
 
-	if(abs(errordtheta)<0.015){
+	if(abs(errordtheta)<0.05){
 		pos_ctrl[2] = 0;
 		itermdtheta = 0;
 	}
@@ -301,6 +310,7 @@ void PosController::getParams(){
 }
 
 void PosController::positionFusion(){
+
 	//Processes position information and conbines them together for more accurate position control
 	//This method is called everytime marvelmind data is updated
 	auto& clk = *this->get_clock();
@@ -308,9 +318,13 @@ void PosController::positionFusion(){
 	pxw = (alpha*p_marvelmindx)+(1-alpha)*pxw;
 	pyw = (alpha*p_marvelmindy)+(1-alpha)*pyw;
 
-	RCLCPP_INFO_THROTTLE(this->get_logger(), clk,1000, "Current position after fusion : x = %lf, y = %lf",pxw,pyw);
+	RCLCPP_INFO_THROTTLE(this->get_logger(), clk,1000, "Current position after fusion : X = %lf, Y = %lf",pxw,pyw);
 }
 
+bool PosController::isPosingFinished(){
+	
+	return !is_posing;
+}
 
 
 

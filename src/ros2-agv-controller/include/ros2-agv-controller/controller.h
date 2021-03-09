@@ -19,6 +19,7 @@ public:
 	void getParams();
 	void getPosition();
 	void positionFusion();
+	bool isPosingFinished();
 
 
 
@@ -69,7 +70,7 @@ private:
 	double px = 0,py = 0;
 	double pxw = 0,pyw = 0,theta = 0;
 	double p_marvelmindx =0,p_marvelmindy =0;
-	double is_calibrated;
+	double is_calibrated,is_posing;
 	double offset_x=0,offset_y=0;
 	double dtheta = 0;
 
